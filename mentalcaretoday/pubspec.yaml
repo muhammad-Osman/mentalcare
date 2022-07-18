@@ -1,0 +1,173 @@
+name: mentalcaretoday
+description: A new Flutter project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^1.1.0
+  intl: ^0.17.0
+  audio_video_progress_bar: ^0.10.0
+  shared_preferences: ^2.0.13
+  just_audio: ^0.9.27
+  cloudinary_public: ^0.11.0
+  fluttertoast: ^8.0.9
+  provider: ^6.0.3
+  file_picker: ^4.5.1
+  http: ^0.13.4
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^1.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/icons/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Raleway-Black
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Black.ttf
+    - family: Raleway-BlackItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-BlackItalic.ttf
+    - family: Raleway-Bold
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Bold.ttf
+    - family: Raleway-BoldItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-BoldItalic.ttf
+    - family: Raleway-ExtraBold
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-ExtraBold.ttf
+    - family: Raleway-ExtraBoldItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-ExtraBoldItalic.ttf
+    - family: Raleway-ExtraLight
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-ExtraLight.ttf
+    - family: Raleway-ExtraLightItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-ExtraLightItalic.ttf
+    - family: Raleway-Italic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Italic.ttf
+    - family: Raleway-Light
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Light.ttf
+    - family: Raleway-LightItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-LightItalic.ttf
+    - family: Raleway-Medium
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Medium.ttf
+    - family: Raleway-MediumItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-MediumItalic.ttf
+    - family: Raleway-Regular
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Regular.ttf
+    - family: Raleway-SemiBold
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-SemiBold.ttf
+    - family: Raleway-SemiBoldItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-SemiBoldItalic.ttf
+    - family: Raleway-Thin
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Thin.ttf
+    - family: Raleway-ThinItalic
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-ThinItalic.ttf
+
+    - family: Lato-Black
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Black.ttf
+    - family: Lato-BlackItalic
+      fonts:
+        - asset: assets/fonts/Lato/Lato-BlackItalic.ttf
+    - family: Lato-Bold
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Bold.ttf
+    - family: Lato-BoldItalic
+      fonts:
+        - asset: assets/fonts/Lato/Lato-BoldItalic.ttf
+    - family: Lato-Italic
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Italic.ttf
+    - family: Lato-Light
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Light.ttf
+    - family: Lato-LightItalic
+      fonts:
+        - asset: assets/fonts/Lato/Lato-LightItalic.ttf
+    - family: Lato-Regular
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+    - family: Lato-Thin
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Thin.ttf
+    - family: Lato-ThinItalic
+      fonts:
+        - asset: assets/fonts/Lato/Lato-ThinItalic.ttf
+
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,0 +1,34 @@
+  ShowDialogBox.customDialogBoxTwoButtons(context, "Feelings",
+                  "How are you feeling?", "THE SAME", "BETTER",
+                  imagePath: R.image.feeling,
+                  onPressB1: () {},
+                  onPressB2: () {});
+
+
+ShowDialogBox.customDialogBoxTwoButtons(
+                  context,
+                  "Discard Recording",
+                  "Are you sure to discard the recording?",
+                  "CANCEL",
+                  "YES",
+                  imagePath: R.image.discardRcr,
+                  onPressB1: () {},
+                  onPressB2: () {});
+
+
+ ShowDialogBox.customDialogBoxOneButton(context, "Payment",
+                  "The payment was done successfully!", "OK",
+                  imagePath: R.image.paymentSc, onPressB2: () {});
+
+                
+ ShowDialogBox.feedbackDialogBox(
+                
+                context,s
+              
+                "FEEDBACK",
+                "CLOSE",
+                "SEND",
+                imagePath: R.image.feedbackAlert,
+                onPressB1: () {},
+                onPressB2: () {},
+              );                
