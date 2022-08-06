@@ -7,6 +7,7 @@ const String signUpScreen = '/signUpScreen';
 const String settingScreen = '/settingScreen';
 const String paymentScreen = '/paymentScreen';
 const String profileScreen = '/profileScreen';
+const String feedbackScreen = '/feedbackScreen';
 const String editCardScreen = '/editCardScreen';
 const String conversationScreen = '/conversationScreen';
 const String specificMoodScreen = '/specificMoodScreen';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentalcaretoday/src/UI/views/chat_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/conversation_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/created_at_screen.dart';
+import 'package:mentalcaretoday/src/UI/views/feedback.dart';
 import 'package:mentalcaretoday/src/UI/views/forgot_password_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/home_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/music_list.dart';
@@ -92,8 +93,11 @@ class MyRouter {
         );
       case specificMoodScreen:
         return MaterialPageRoute(
-          builder: (context) =>
-              getRouterWithScaleFactor(context, const SpecificMoodScreen()),
+          builder: (context) => getRouterWithScaleFactor(
+              context,
+              SpecificMoodScreen(
+                id: settings.arguments as int,
+              )),
           settings: RouteSettings(arguments: settings.arguments),
         );
       case usersScreen:
@@ -114,10 +118,19 @@ class MyRouter {
               getRouterWithScaleFactor(context, const EditCardScreen()),
           settings: RouteSettings(arguments: settings.arguments),
         );
-      case musicListScreen:
+      case feedbackScreen:
         return MaterialPageRoute(
           builder: (context) =>
-              getRouterWithScaleFactor(context, const MusicListScreen()),
+              getRouterWithScaleFactor(context, const FeedbackScreen()),
+          settings: RouteSettings(arguments: settings.arguments),
+        );
+      case musicListScreen:
+        return MaterialPageRoute(
+          builder: (context) => getRouterWithScaleFactor(
+              context,
+              MusicListScreen(
+                id: settings.arguments as int,
+              )),
           settings: RouteSettings(arguments: settings.arguments),
         );
 

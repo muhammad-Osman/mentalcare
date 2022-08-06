@@ -82,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
-        final DateFormat formatter = DateFormat('MM-dd-yyyy');
+        final DateFormat formatter = DateFormat('dd-MM-yyyy');
         final String formatted = formatter.format(picked.toLocal());
         _dobController.text = formatted;
       });

@@ -1,65 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-class PageManager {
-  final progressNotifier = ValueNotifier<ProgressBarState>(
-    ProgressBarState(
+class AfrimationPageManger {
+  final progressNotifier = ValueNotifier<ProgressState>(
+    ProgressState(
       current: Duration.zero,
       buffered: Duration.zero,
       total: Duration.zero,
     ),
   );
-  final buttonNotifier = ValueNotifier<ButtonState>(ButtonState.paused);
+  final buttonNotifier = ValueNotifier<MyButtonState>(MyButtonState.paused);
 
   // static const url =
   //     'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
 
-  late AudioPlayer _audioPlayer;
-  PageManager(String url) {
+  late AudioPlayer audioPlayer;
+  AfrimationPageManger(String url) {
     _init(url);
   }
 
   void _init(String url) async {
-    _audioPlayer = AudioPlayer();
-    await _audioPlayer.setUrl(url);
+    audioPlayer = AudioPlayer();
+    await audioPlayer.setUrl(url);
 
-    _audioPlayer.playerStateStream.listen((playerState) {
+    audioPlayer.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
       final processingState = playerState.processingState;
       if (processingState == ProcessingState.loading ||
           processingState == ProcessingState.buffering) {
-        buttonNotifier.value = ButtonState.loading;
+        buttonNotifier.value = MyButtonState.loading;
       } else if (!isPlaying) {
-        buttonNotifier.value = ButtonState.paused;
+        buttonNotifier.value = MyButtonState.paused;
       } else if (processingState != ProcessingState.completed) {
-        buttonNotifier.value = ButtonState.playing;
+        buttonNotifier.value = MyButtonState.playing;
       } else {
-        _audioPlayer.seek(Duration.zero);
-        _audioPlayer.pause();
+        audioPlayer.seek(Duration.zero);
+        audioPlayer.pause();
       }
     });
 
-    _audioPlayer.positionStream.listen((position) {
+    audioPlayer.positionStream.listen((position) {
       final oldState = progressNotifier.value;
-      progressNotifier.value = ProgressBarState(
+      progressNotifier.value = ProgressState(
         current: position,
         buffered: oldState.buffered,
         total: oldState.total,
       );
     });
 
-    _audioPlayer.bufferedPositionStream.listen((bufferedPosition) {
+    audioPlayer.bufferedPositionStream.listen((bufferedPosition) {
       final oldState = progressNotifier.value;
-      progressNotifier.value = ProgressBarState(
+      progressNotifier.value = ProgressState(
         current: oldState.current,
         buffered: bufferedPosition,
         total: oldState.total,
       );
     });
 
-    _audioPlayer.durationStream.listen((totalDuration) {
+    audioPlayer.durationStream.listen((totalDuration) {
       final oldState = progressNotifier.value;
-      progressNotifier.value = ProgressBarState(
+      progressNotifier.value = ProgressState(
         current: oldState.current,
         buffered: oldState.buffered,
         total: totalDuration ?? Duration.zero,
@@ -68,28 +68,28 @@ class PageManager {
   }
 
   void play() {
-    _audioPlayer.play();
+    audioPlayer.play();
   }
 
   void pause() {
-    _audioPlayer.pause();
+    audioPlayer.pause();
   }
 
   void seek(Duration position) {
-    _audioPlayer.seek(position);
+    audioPlayer.seek(position);
   }
 
   void dispose() {
-    _audioPlayer.dispose();
+    audioPlayer.dispose();
   }
 
   void loop(LoopMode loopMode) {
-    _audioPlayer.setLoopMode(loopMode);
+    audioPlayer.setLoopMode(loopMode);
   }
 }
 
-class ProgressBarState {
-  ProgressBarState({
+class ProgressState {
+  ProgressState({
     required this.current,
     required this.buffered,
     required this.total,
@@ -99,4 +99,4 @@ class ProgressBarState {
   final Duration total;
 }
 
-enum ButtonState { paused, playing, loading }
+enum MyButtonState { paused, playing, loading }

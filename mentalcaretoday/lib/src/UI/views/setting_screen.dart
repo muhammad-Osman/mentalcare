@@ -205,9 +205,14 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(
                           height: Helper.dynamicHeight(context, 1),
                         ),
-                        MoreListTile(
-                          title: "Send Feedback",
-                          imagePath: R.image.feedback,
+                        GestureDetector(
+                          onTap: (() {
+                            Navigator.of(context).pushNamed(feedbackScreen);
+                          }),
+                          child: MoreListTile(
+                            title: "Send Feedback",
+                            imagePath: R.image.feedback,
+                          ),
                         ),
                         MoreListTile(
                           title: "Cancel Subscription",

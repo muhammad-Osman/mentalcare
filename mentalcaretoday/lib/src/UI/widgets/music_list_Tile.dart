@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
+import 'package:mentalcaretoday/src/models/single_mood.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 
@@ -8,6 +9,7 @@ class MusicListtTile extends StatelessWidget {
   const MusicListtTile({
     Key? key,
     this.list,
+    this.recordings,
     required this.index,
     this.verticalPadding = 0.5,
     this.horizontalPadding = 2,
@@ -19,7 +21,9 @@ class MusicListtTile extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
-  final List? list;
+  final List<Music>? list;
+  final List<Recording>? recordings;
+
   final int index;
   final double verticalPadding;
   final double horizontalPadding;
@@ -71,8 +75,7 @@ class MusicListtTile extends StatelessWidget {
               SizedBox(
                 width: Helper.dynamicWidth(context, 60),
                 child: TextWidget(
-                  text:
-                      "Nature sound 1Nature sound 1Nature sound 1Nature sound 1Nature sound 1Nature sound 1",
+                  text: list![index].title!,
                   fontSize: 1.25,
                   overFlow: TextOverflow.ellipsis,
                   color: R.color.dark_black,
@@ -83,7 +86,7 @@ class MusicListtTile extends StatelessWidget {
             ],
           ),
           trailing: TextWidget(
-            text: "15:00",
+            text: list![index].createdAt!.toString().substring(0, 11),
             fontSize: 0.75,
             fontFamily: R.fonts.latoRegular,
           ),

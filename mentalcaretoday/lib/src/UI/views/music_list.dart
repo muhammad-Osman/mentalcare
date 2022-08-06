@@ -8,8 +8,12 @@ import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 
+import '../../models/single_mood.dart';
+import '../../services/mood_services.dart';
+
 class MusicListScreen extends StatefulWidget {
-  const MusicListScreen({Key? key}) : super(key: key);
+  final int id;
+  const MusicListScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   State<MusicListScreen> createState() => _MusicListScreenState();
@@ -33,8 +37,30 @@ class _MusicListScreenState extends State<MusicListScreen> {
     super.dispose();
   }
 
+  final MoodServices _moodServices = MoodServices();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchMoods();
+  }
+
+  SingleMood? _singleMood;
+  bool isLoading = false;
+  void fetchMoods() async {
+    setState(() {
+      isLoading = true;
+    });
+    _singleMood = await _moodServices.getSingleMood(context, widget.id);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -111,22 +137,30 @@ class _MusicListScreenState extends State<MusicListScreen> {
                     ],
                   ),
                 ),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  itemCount: 15,
-                  itemBuilder: (context, index) {
-                    return MusicListtTile(
-                      index: 1,
-                      buttonHeight: 5,
-                      buttonWidth: 5,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(specificMoodScreen);
-                      },
-                    );
-                  },
-                ),
+                isLoading
+                    ? SizedBox(
+                        height: 400,
+                        child: const Center(child: CircularProgressIndicator()))
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: _singleMood!.music!.length,
+                        itemBuilder: (context, index) {
+                          return MusicListtTile(
+                            list: _singleMood!.music!,
+                            index: index,
+                            buttonHeight: 5,
+                            buttonWidth: 5,
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                specificMoodScreen,
+                                arguments: _singleMood!.music![index].id,
+                              );
+                            },
+                          );
+                        },
+                      ),
               ],
             ),
           ),

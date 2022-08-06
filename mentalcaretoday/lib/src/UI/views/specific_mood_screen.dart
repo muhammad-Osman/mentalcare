@@ -11,8 +11,14 @@ import 'package:mentalcaretoday/src/services/audio_page_manager.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 
+import '../../models/single_mood.dart';
+import '../../models/single_music.dart';
+import '../../services/mood_services.dart';
+
 class SpecificMoodScreen extends StatefulWidget {
-  const SpecificMoodScreen({Key? key}) : super(key: key);
+  final int id;
+
+  const SpecificMoodScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   State<SpecificMoodScreen> createState() => _SpecificMoodScreenState();
@@ -29,7 +35,23 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
   @override
   void initState() {
     super.initState();
-    _pageManager = PageManager();
+    _pageManager = PageManager(
+        "https://deeze.net/uploads/ringtones-2022-627a94752e351.mp3");
+    fetchMoods();
+  }
+
+  final MoodServices _moodServices = MoodServices();
+
+  SingleMusic? _singleMusic;
+  bool isLoading = false;
+  void fetchMoods() async {
+    setState(() {
+      isLoading = true;
+    });
+    _singleMusic = await _moodServices.getSingleMusic(context, widget.id);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -180,23 +202,25 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
             child: SizedBox(
               height: Helper.dynamicHeight(context, 25),
               width: Helper.dynamicWidth(context, 90),
-              child: ListView.separated(
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: Helper.dynamicHeight(context, 1),
-                  );
-                },
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return MusicContainerWithTwoIcons(
-                    text: "You are Good Enough & you are Good Enough & you ...",
-                    onPressedMusic: () {},
-                    onPressedCross: () {},
-                  );
-                },
-              ),
+              child: _singleMusic!.recordings!.isEmpty
+                  ? const Center(child: Text("Not Found"))
+                  : ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(
+                          height: Helper.dynamicHeight(context, 1),
+                        );
+                      },
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _singleMusic!.recordings!.length,
+                      itemBuilder: (context, index) {
+                        return MusicContainerWithTwoIcons(
+                          text: _singleMusic!.recordings![index].name!,
+                          onPressedMusic: () {},
+                          onPressedCross: () {},
+                        );
+                      },
+                    ),
             ),
           ),
           Padding(
@@ -226,10 +250,10 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                 },
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 3,
+                itemCount: _singleMusic!.affirmations!.length,
                 itemBuilder: (context, index) {
                   return MusicContainerWithOneIcons(
-                    text: "You are Good Enough & you are Good Enough & you ...",
+                    text: _singleMusic!.affirmations![index].title!,
                     onPressedMusic: () {},
                   );
                 },
@@ -317,8 +341,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                       R.color.white,
                     ],
                   ),
-                  text:
-                      "I’m going to have a good Day I’m going to have a good Day",
+                  text: _singleMusic?.affirmations![0].title ?? "",
                   color: R.color.dark_black,
                   onPressed: () => _affirmationDialog(context, setState),
                 ),

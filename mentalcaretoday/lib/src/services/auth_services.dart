@@ -68,7 +68,7 @@ class AuthService {
         onSuccess: () {
           showSnackBar(
             context,
-            'Account created! Login with the same credentials!',
+            'Account created! please verifiy your email',
           );
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const SignInScreen()),
@@ -103,12 +103,48 @@ class AuthService {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           // ignore: use_build_context_synchronously
           final Map<String, dynamic> user = json.decode(res.body);
+          print(user);
           Provider.of<UserProvider>(context, listen: false)
               .setUser(user["user"]);
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (Route<dynamic> route) => false);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  // forgot Password
+  Future forgotPassword({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(forgotPasswordUrl),
+        body: jsonEncode({
+          'email': email,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final Map<String, dynamic> user = json.decode(res.body);
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          // ignore: use_build_context_synchronously
+          final Map<String, dynamic> user = json.decode(res.body);
+
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const SignInScreen()),
               (Route<dynamic> route) => false);
         },
       );
