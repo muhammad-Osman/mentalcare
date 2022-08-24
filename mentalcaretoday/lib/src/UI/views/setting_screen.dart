@@ -8,6 +8,7 @@ import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../provider/user_provider.dart';
 import '../../services/auth_services.dart';
@@ -112,9 +113,20 @@ class _SettingScreenState extends State<SettingScreen> {
                                     return Padding(
                                       padding: EdgeInsets.all(
                                           Helper.dynamicFont(context, 0.5)),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.blue,
+                                      child: Center(
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade400,
+                                          highlightColor: Colors.grey.shade300,
+                                          child: Container(
+                                            width: Helper.dynamicWidth(
+                                                context, 10),
+                                            height: Helper.dynamicWidth(
+                                                context, 10),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.grey.shade200,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     );

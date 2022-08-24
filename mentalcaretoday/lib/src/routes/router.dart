@@ -106,12 +106,12 @@ class MyRouter {
               getRouterWithScaleFactor(context, const UsersScreen()),
           settings: RouteSettings(arguments: settings.arguments),
         );
-      case chatScreen:
-        return MaterialPageRoute(
-          builder: (context) =>
-              getRouterWithScaleFactor(context, const ChatScreen()),
-          settings: RouteSettings(arguments: settings.arguments),
-        );
+      // case chatScreen:
+      //   return MaterialPageRoute(
+      //     builder: (context) =>
+      //         getRouterWithScaleFactor(context, const ChatScreen()),
+      //     settings: RouteSettings(arguments: settings.arguments),
+      //   );
       case editCardScreen:
         return MaterialPageRoute(
           builder: (context) =>

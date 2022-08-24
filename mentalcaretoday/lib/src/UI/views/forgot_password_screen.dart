@@ -117,6 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: emailController,
                       node: emailNode,
                       placeHolder: "Email address",

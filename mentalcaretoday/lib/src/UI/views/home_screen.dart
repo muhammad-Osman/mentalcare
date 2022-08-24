@@ -6,6 +6,7 @@ import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../models/mood.dart';
 import '../../services/mood_services.dart';
@@ -115,73 +116,116 @@ class _HomeScreenState extends State<HomeScreen> {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(
-                  width: Helper.dynamicWidth(context, 100),
-                  height: isLoading ? 100 : 195,
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : GridView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: moodsList!.moods!.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
+              isLoading
+                  ? GridView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 2,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
                                       horizontal:
-                                          Helper.dynamicWidth(context, 1),
+                                          Helper.dynamicWidth(context, 2),
+                                      vertical:
+                                          Helper.dynamicHeight(context, 2)),
+                                  child: Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade400,
+                                    highlightColor: Colors.grey.shade300,
+                                    child: Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.shade400,
+                                          // border: Border.all(color: Colors.black),
+                                          shape: BoxShape.circle),
                                     ),
-                                    child: Radio(
-                                      value: index,
-                                      groupValue: _radioValue,
-                                      activeColor: R.color.buttonColorblue,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _radioValue = newValue as int;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 130,
-                                    width: 130,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: index / 2 == 0
-                                            ? const AssetImage(
-                                                "assets/images/sad.png")
-                                            : const AssetImage(
-                                                "assets/images/sad.png"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      child: AppBarTextHeadLine(
-                                        text: moodsList!.moods![index].name!,
-                                        fontFamily: R.fonts.ralewaySemiBold,
-                                        color: R.color.white,
-                                        fontSize: 1.1,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                  )),
+                              Shimmer.fromColors(
+                                baseColor: Colors.grey.shade400,
+                                highlightColor: Colors.grey.shade300,
+                                child: Container(
+                                  height: 100,
+                                  width: 130,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade400,
+                                      borderRadius: BorderRadius.circular(20)),
+                                ),
                               ),
-                            );
-                          },
-                        )),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : GridView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: moodsList!.moods!.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: Helper.dynamicWidth(context, 1),
+                                ),
+                                child: Radio(
+                                  value: index,
+                                  groupValue: _radioValue,
+                                  activeColor: R.color.buttonColorblue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _radioValue = newValue as int;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                height: 130,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: index / 2 == 0
+                                        ? const AssetImage(
+                                            "assets/images/sad.png")
+                                        : const AssetImage(
+                                            "assets/images/sad.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: AppBarTextHeadLine(
+                                    text: moodsList!.moods![index].name!,
+                                    fontFamily: R.fonts.ralewaySemiBold,
+                                    color: R.color.white,
+                                    fontSize: 1.1,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: Helper.dynamicWidth(context, 6)),

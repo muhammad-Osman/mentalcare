@@ -15,13 +15,12 @@ class AfrimationPageManger {
   //     'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
 
   late AudioPlayer audioPlayer;
-  AfrimationPageManger(String url) {
-    _init(url);
+  AfrimationPageManger() {
+    _init();
   }
 
-  void _init(String url) async {
+  void _init() async {
     audioPlayer = AudioPlayer();
-    await audioPlayer.setUrl(url);
 
     audioPlayer.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
@@ -65,6 +64,10 @@ class AfrimationPageManger {
         total: totalDuration ?? Duration.zero,
       );
     });
+  }
+
+  void setURl(String url) async {
+    await audioPlayer.setUrl(url);
   }
 
   void play() {

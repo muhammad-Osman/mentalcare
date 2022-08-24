@@ -1,5 +1,26 @@
 import 'dart:convert';
 
+// List<User> userFromJson(String str) =>
+//     List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+UserResponse userFromJson(String str) =>
+    UserResponse.fromJson(json.decode(str));
+
+class UserResponse {
+  UserResponse({required this.status, required this.users});
+  bool status;
+  List<User> users;
+
+  factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
+        status: json["status"],
+        users: List<User>.from(json["users"].map((x) => User.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "users": List<dynamic>.from(users.map((x) => x.toJson())),
+      };
+}
+
 class User {
   final int? id;
   final String firstName;

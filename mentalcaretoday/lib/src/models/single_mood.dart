@@ -114,8 +114,8 @@ class Recording {
   });
 
   int? id;
-  int? userId;
-  int? affirmationId;
+  String? userId;
+  String? affirmationId;
   String? name;
   dynamic deletedAt;
   DateTime? createdAt;

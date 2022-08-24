@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -37,13 +37,26 @@ dependencies:
   intl: ^0.17.0
   audio_video_progress_bar: ^0.10.0
   shared_preferences: ^2.0.13
-  just_audio: ^0.9.27
+  cached_network_image: ^3.2.1
+  just_audio:
   cloudinary_public: ^0.11.0
+  progress_dialog_null_safe: ^1.0.7
+  image_picker: ^0.8.5+3
   fluttertoast: ^8.0.9
+  shimmer: ^2.0.0
+  email_validator: ^2.0.1
   provider: ^6.0.3
   file_picker: ^4.5.1
   audioplayers: ^0.20.1
-  flutter_sound_lite: ^8.1.9
+  path_provider: ^2.0.11
+  permission_handler: ^9.2.0
+  flutter_sound: ^9.2.13
+  google_sign_in: ^5.2.4
+  firebase_core: ^1.19.1
+  firebase_auth: ^3.4.1
+  cloud_firestore: ^3.2.1
+  firebase_storage: ^10.3.1
+  uuid: ^3.0.6
   http: ^0.13.4
   
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,6 +18,7 @@ class TextFieldWithIcon extends StatelessWidget {
       this.onPressSuffix,
       this.isSecure = false,
       this.enabledfield = true,
+      this.isEmail = false,
       this.keyboardType = TextInputType.text,
       this.textInputDecoration = TextInputAction.next,
       this.errorText,
@@ -32,7 +34,8 @@ class TextFieldWithIcon extends StatelessWidget {
       this.maxLines = 1,
       this.minLines = 1,
       this.isSuffixIcon = false,
-      this.borderRadius = 15.0})
+      this.borderRadius = 15.0,
+      required this.onChanged})
       : super(key: key);
 
   final FocusNode? node;
@@ -42,8 +45,10 @@ class TextFieldWithIcon extends StatelessWidget {
   final double imageWidth;
   final double imageHeight;
   final String? placeHolder;
+  final Function(String) onChanged;
   final VoidCallback? onPressSuffix;
   final bool isSecure;
+  final bool isEmail;
   final double borderRadius;
   final bool enabledfield;
   final TextInputType keyboardType;
@@ -68,7 +73,7 @@ class TextFieldWithIcon extends StatelessWidget {
       inputFormatters: inputFormatters,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       focusNode: node,
-      onChanged: (a) {},
+      onChanged: onChanged,
       onTap: onTap,
       enabled: enabledfield,
       textCapitalization: TextCapitalization.none,
@@ -157,12 +162,21 @@ class TextFieldWithIcon extends StatelessWidget {
           minWidth: Helper.dynamicWidth(context, 5),
         ),
       ),
-      validator: (val) {
-        if (val == null || val.isEmpty) {
-          return '';
-        }
-        return null;
-      },
+      validator: isEmail
+          ? (email) {
+              if (email!.isEmpty) {
+                return "";
+              } else if (!EmailValidator.validate(email)) {
+                return "";
+              }
+              return null;
+            }
+          : (val) {
+              if (val == null || val.isEmpty) {
+                return '';
+              }
+              return null;
+            },
     );
   }
 }

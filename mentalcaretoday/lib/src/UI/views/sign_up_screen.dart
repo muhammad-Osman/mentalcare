@@ -8,6 +8,7 @@ import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../../services/auth_services.dart';
 
@@ -120,6 +121,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pr = ProgressDialog(context);
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -151,11 +159,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  late ProgressDialog pr;
   bool isLoading = false;
   void signUpUser() async {
     setState(() {
       isLoading = true;
     });
+    pr.style(
+        elevation: 10,
+        insetAnimCurve: Curves.easeInOut,
+        backgroundColor: Color(0xFF4B66EA),
+        message: "Please wait!",
+        messageTextStyle: TextStyle(color: Colors.white, fontSize: 13),
+        progressWidget: Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        )));
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+
+    await pr.show();
     await authService.signUpUser(
       context: context,
       firstName: _firstNameController.text,
@@ -169,6 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       password: _passwordController.text,
       passwordConfirmation: _confirmPasswordController.text,
     );
+    await pr.hide();
     setState(() {
       isLoading = false;
     });
@@ -235,6 +259,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           children: [
                             Expanded(
                               child: TextFieldWithIcon(
+                                onChanged: ((p0) {}),
                                 controller: _firstNameController,
                                 node: firstNnode,
                                 placeHolder: "First Name",
@@ -245,6 +270,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             Expanded(
                               child: TextFieldWithIcon(
+                                onChanged: ((p0) {}),
                                 controller: _lastNameController,
                                 node: lastNnode,
                                 placeHolder: "Last Name",
@@ -256,14 +282,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _emailController,
                           node: emailNode,
+                          isEmail: true,
                           placeHolder: "Email address",
                         ),
                         SizedBox(
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _passwordController,
                           node: passwordNode,
                           placeHolder: "Password",
@@ -278,6 +307,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _confirmPasswordController,
                           node: conifrmPassNode,
                           placeHolder: "Confirm Password",
@@ -294,6 +324,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         InkWell(
                           onTap: () => _selectDate(context),
                           child: TextFieldWithIcon(
+                            onChanged: ((p0) {}),
                             controller: _dobController,
                             node: dobNode,
                             enabledfield: false,
@@ -360,6 +391,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _cityController,
                           node: cityNode,
                           placeHolder: "City",
@@ -368,6 +400,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _stateController,
                           node: stateNode,
                           placeHolder: "State",
@@ -376,6 +409,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _countryController,
                           node: countryNode,
                           placeHolder: "Country",

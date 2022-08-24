@@ -7,6 +7,7 @@ import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../models/single_mood.dart';
 import '../../services/mood_services.dart';
@@ -122,6 +123,7 @@ class _MusicListScreenState extends State<MusicListScreen> {
                           height: Helper.dynamicHeight(context, 7),
                           width: Helper.dynamicWidth(context, 88),
                           child: TextFieldWithIcon(
+                            onChanged: ((p0) {}),
                             controller: _searchController,
                             node: searchNode,
                             placeHolder: "Search",
@@ -138,9 +140,78 @@ class _MusicListScreenState extends State<MusicListScreen> {
                   ),
                 ),
                 isLoading
-                    ? SizedBox(
-                        height: 400,
-                        child: const Center(child: CircularProgressIndicator()))
+                    ? ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Helper.dynamicHeight(context, 0.5),
+                              horizontal: Helper.dynamicWidth(context, 5),
+                            ),
+                            child: Card(
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Colors.grey.shade200,
+                                    width: Helper.dynamicFont(context, 0.1),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                leading: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade400,
+                                      highlightColor: Colors.grey.shade300,
+                                      child: Container(
+                                        height:
+                                            Helper.dynamicHeight(context, 5),
+                                        width: Helper.dynamicHeight(context, 5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          border: Border.all(
+                                            color: Colors.grey.shade200,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              Helper.dynamicFont(context, 10),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(""),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: Helper.dynamicWidth(context, 5),
+                                    ),
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade400,
+                                      highlightColor: Colors.grey.shade300,
+                                      child: Container(
+                                        width: Helper.dynamicWidth(context, 50),
+                                        height: 10,
+                                        color: Colors.grey.shade200,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade400,
+                                  highlightColor: Colors.grey.shade300,
+                                  child: Container(
+                                    height: 10,
+                                    width: 25,
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
                     : ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         padding: EdgeInsets.zero,

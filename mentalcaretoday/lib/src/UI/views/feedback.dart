@@ -161,6 +161,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           maxLines: 4,
                           controller: _feedBackController,
                           node: emailNode,

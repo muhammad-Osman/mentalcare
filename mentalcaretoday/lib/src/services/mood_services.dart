@@ -123,4 +123,58 @@ class MoodServices {
 
     return getMoods!;
   }
+
+  Future addrecording({
+    required BuildContext context,
+    required final String path,
+    required final String affirmationId,
+    required final String name,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('x-auth-token');
+
+    if (token == null) {
+      prefs.setString('x-auth-token', '');
+    }
+
+    try {
+      //for multipartrequest
+      var request = http.MultipartRequest('POST', Uri.parse(addRecordingUrl));
+      request.fields["affirmation_id"] = affirmationId;
+      request.fields["name"] = name;
+      //for token
+      request.headers.addAll({"Authorization": "Bearer $token"});
+
+      //for image and videos and files
+
+      request.files.add(await http.MultipartFile.fromPath("recording", path));
+
+      //for completeing the request
+      var response = await request.send();
+
+      //for getting and decoding the response into json format
+      var responsed = await http.Response.fromStream(response);
+      print(responsed.body);
+      final responseData = json.decode(responsed.body);
+
+      httpErrorHandle(
+        response: responsed,
+        context: context,
+        onSuccess: () {
+          showSnackBar(
+            context,
+            'Payment Detail Added Successfuly!',
+          );
+          Navigator.of(context).pop();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ));
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
 }

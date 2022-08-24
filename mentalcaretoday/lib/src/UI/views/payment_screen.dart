@@ -335,6 +335,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: _cardHolderController,
                       node: cardHolderNode,
                       placeHolder: "Card Holder Name",
@@ -347,7 +348,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: _creditCardController,
+                      keyboardType: TextInputType.number,
                       node: creditCardNode,
                       placeHolder: "Credit Card Number",
                     ),
@@ -359,6 +362,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: _expirationController,
                       node: expirationNode,
                       placeHolder: "Expiration Date",
@@ -372,7 +376,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       horizontal: Helper.dynamicWidth(context, 5),
                     ),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: _cvvController,
+                      keyboardType: TextInputType.number,
                       node: cvvNode,
                       placeHolder: "CCV",
                     ),

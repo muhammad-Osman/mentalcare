@@ -8,6 +8,10 @@ class ConversationListTile extends StatelessWidget {
     Key? key,
     this.list,
     required this.index,
+    required this.name,
+    required this.image,
+    required this.lastText,
+    required this.time,
     this.verticalPadding = 0.1,
     this.horizontalPadding = 0.5,
     this.containerRadius = 1,
@@ -30,6 +34,10 @@ class ConversationListTile extends StatelessWidget {
   final double buttonHeight;
   final double counterHeigth;
   final double counterWidth;
+  final String name;
+  final String image;
+  final String lastText;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +74,7 @@ class ConversationListTile extends StatelessWidget {
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(radius),
                           child: Image.network(
-                            "https://www.menshairstyletrends.com/wp-content/uploads/2020/03/boys-shaggy-haircut-_pskphoto--1024x1024.jpg",
+                            image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -107,13 +115,13 @@ class ConversationListTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextWidget(
-                            text: "Isabella Alex",
+                            text: name,
                             fontSize: 1.25,
                             fontFamily: R.fonts.ralewayMedium,
                             color: R.color.dark_black,
                           ),
                           TextWidget(
-                            text: Helper.getFormattedDate(DateTime.now()),
+                            text: time,
                             fontSize: 0.75,
                             fontFamily: R.fonts.latoRegular,
                           ),
@@ -128,7 +136,7 @@ class ConversationListTile extends StatelessWidget {
                           Expanded(
                             flex: 8,
                             child: TextWidget(
-                              text: "Nohting a tonight",
+                              text: lastText,
                               fontFamily: R.fonts.ralewayRegular,
                               color: R.color.dark_black,
                               fontSize: 1,

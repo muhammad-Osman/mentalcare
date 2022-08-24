@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../UI/views/sign_in_screen.dart';
 import '../models/user.dart';
+import '../provider/other_user_provider.dart';
 import '../provider/user_provider.dart';
 import '../utils/error_handling.dart';
 import '../utils/utils.dart';
@@ -80,6 +82,7 @@ class AuthService {
     }
   }
 
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   // sign in user
   Future signInUser({
     required BuildContext context,
@@ -95,7 +98,11 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      print(res.body);
+      print(res.statusCode);
       final Map<String, dynamic> user = json.decode(res.body);
+      print(user);
+
       httpErrorHandle(
         response: res,
         context: context,
@@ -104,8 +111,104 @@ class AuthService {
           // ignore: use_build_context_synchronously
           final Map<String, dynamic> user = json.decode(res.body);
           print(user);
+
           Provider.of<UserProvider>(context, listen: false)
               .setUser(user["user"]);
+          final userData =
+              Provider.of<UserProvider>(context, listen: false).user;
+
+          User _user = User(
+            id: userData.id,
+            active: userData.active,
+            city: userData.city,
+            country: userData.country,
+            createdAt: userData.createdAt,
+            dob: userData.dob,
+            emailVerifiedAt: userData.emailVerifiedAt,
+            firstName: userData.firstName,
+            gender: userData.gender,
+            lastName: userData.lastName,
+            lastSceneTime: userData.lastSceneTime,
+            premium: userData.premium,
+            state: userData.state,
+            updatedAt: userData.updatedAt,
+            email: userData.email,
+            image: userData.image,
+            password: userData.password,
+            passwordConfirmation: userData.passwordConfirmation,
+          );
+          await firestore
+              .collection('users')
+              .doc(userData.id.toString())
+              .set(_user.toMap());
+          await prefs.setString('x-auth-token', user['access_token']);
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (Route<dynamic> route) => false);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+// sign in user
+  Future signInGoogle({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(loginUrl),
+        body: jsonEncode({'email': email, "social_auth": true}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(res.body);
+      print(res.statusCode);
+      final Map<String, dynamic> user = json.decode(res.body);
+      print(user);
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          // ignore: use_build_context_synchronously
+          final Map<String, dynamic> user = json.decode(res.body);
+          print(user);
+
+          Provider.of<UserProvider>(context, listen: false)
+              .setUser(user["user"]);
+          final userData =
+              Provider.of<UserProvider>(context, listen: false).user;
+
+          User _user = User(
+            id: userData.id,
+            active: userData.active,
+            city: userData.city,
+            country: userData.country,
+            createdAt: userData.createdAt,
+            dob: userData.dob,
+            emailVerifiedAt: userData.emailVerifiedAt,
+            firstName: userData.firstName,
+            gender: userData.gender,
+            lastName: userData.lastName,
+            lastSceneTime: userData.lastSceneTime,
+            premium: userData.premium,
+            state: userData.state,
+            updatedAt: userData.updatedAt,
+            email: userData.email,
+            image: userData.image,
+            password: userData.password,
+            passwordConfirmation: userData.passwordConfirmation,
+          );
+          await firestore
+              .collection('users')
+              .doc(userData.id.toString())
+              .set(_user.toMap());
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -177,6 +280,73 @@ class AuthService {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       final Map<String, dynamic> user = json.decode(userRes.body);
       userProvider.setUser(user["user"]);
+    } catch (e) {
+      print("User Not Found");
+      // showSnackBar(context, e.toString());
+    }
+  }
+
+  // get user data
+  Future getUserDataById(BuildContext context, int id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      http.Response userRes = await http.get(
+        Uri.parse("$getUserByIdUrl$id"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+
+      // ignore: use_build_context_synchronously
+      var userProvider = Provider.of<OtherUserProvider>(context, listen: false);
+      final Map<String, dynamic> user = json.decode(userRes.body);
+      userProvider.setUser(user["user"]);
+    } catch (e) {
+      print("User Not Found");
+      // showSnackBar(context, e.toString());
+    }
+  }
+
+// get user data
+  Future<List<User>?> getAllUser(
+    BuildContext context,
+  ) async {
+    UserResponse? userResponse;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      http.Response userRes = await http.get(
+        Uri.parse(allUserUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+
+      // ignore: use_build_context_synchronously
+
+      final Map<String, dynamic> user = json.decode(userRes.body);
+
+      httpErrorHandle(
+        response: userRes,
+        context: context,
+        onSuccess: () {
+          userResponse = userFromJson(userRes.body);
+        },
+      );
+      return userResponse!.users;
     } catch (e) {
       print("User Not Found");
       // showSnackBar(context, e.toString());

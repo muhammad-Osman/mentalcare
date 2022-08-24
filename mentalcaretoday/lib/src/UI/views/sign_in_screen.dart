@@ -6,8 +6,10 @@ import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../../services/auth_services.dart';
+import '../../services/firebase_auth_services.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -21,7 +23,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final AuthService authService = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  final FBServices _fbServices = FBServices();
+  late ProgressDialog pr;
   FocusNode emailNode = FocusNode();
   FocusNode passwordNode = FocusNode();
 
@@ -51,8 +54,29 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pr = ProgressDialog(context);
+  }
+
   bool isLoading = false;
   void signInUser() async {
+    pr.style(
+        elevation: 10,
+        insetAnimCurve: Curves.easeInOut,
+        backgroundColor: Color(0xFF4B66EA),
+        message: "Please wait!",
+        messageTextStyle: TextStyle(color: Colors.white, fontSize: 13),
+        progressWidget: Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        )));
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+
+    await pr.show();
     setState(() {
       isLoading = true;
     });
@@ -61,6 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
       email: emailController.text,
       password: passwordController.text,
     );
+    await pr.hide();
     setState(() {
       isLoading = false;
     });
@@ -121,7 +146,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: emailController,
+                      isEmail: true,
                       node: emailNode,
                       placeHolder: "Email address",
                     ),
@@ -133,6 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: passwordController,
                       node: passwordNode,
                       placeHolder: "Password",
@@ -147,20 +175,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(
                     height: Helper.dynamicHeight(context, 4),
                   ),
-                  isLoading
-                      ? ButtonWithGradientBackground(
-                          isLoading: true,
-                          text: "Login",
-                          onPressed: () {},
-                        )
-                      : ButtonWithGradientBackground(
-                          text: "Login",
-                          onPressed: () {
-                            if (_signInFormKey.currentState!.validate()) {
-                              signInUser();
-                            }
-                          },
-                        ),
+                  ButtonWithGradientBackground(
+                    text: "Login",
+                    onPressed: () {
+                      if (_signInFormKey.currentState!.validate()) {
+                        signInUser();
+                      }
+                    },
+                  ),
                   SizedBox(
                     height: Helper.dynamicHeight(context, 3),
                   ),
@@ -190,7 +212,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SocialLoginButton(
-                        ontap: () {},
+                        ontap: () {
+                          _fbServices.signInWithGoogle(context);
+                        },
                         image: R.image.google,
                       ),
                       SizedBox(

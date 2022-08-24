@@ -16,11 +16,17 @@ class UsersListTile extends StatelessWidget {
     this.radius = 40,
     this.buttonWidth = 6.5,
     this.buttonHeight = 6.5,
+    required this.imageUrl,
+    required this.name,
+    required this.city,
     required this.onPressed,
   }) : super(key: key);
 
   final List? list;
   final int index;
+  final String imageUrl;
+  final String name;
+  final String city;
   final double verticalPadding;
   final double horizontalPadding;
   final double containerRadius;
@@ -78,7 +84,7 @@ class UsersListTile extends StatelessWidget {
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(radius),
                       child: Image.network(
-                        "https://www.menshairstyletrends.com/wp-content/uploads/2020/03/boys-shaggy-haircut-_pskphoto--1024x1024.jpg",
+                        imageUrl,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -93,7 +99,7 @@ class UsersListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextWidget(
-                        text: "Isabella Alex",
+                        text: name,
                         fontSize: 1.25,
                         color: R.color.dark_black,
                         fontFamily: R.fonts.ralewaySemiBold,
@@ -103,7 +109,7 @@ class UsersListTile extends StatelessWidget {
                         height: Helper.dynamicHeight(context, .5),
                       ),
                       TextWidget(
-                        text: "27 Yrs",
+                        text: city,
                         fontSize: 1,
                         fontFamily: R.fonts.latoRegular,
                         color: R.color.dark_black,

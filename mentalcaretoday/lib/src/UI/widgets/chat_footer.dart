@@ -9,7 +9,10 @@ class ChatFooter extends StatelessWidget {
   final TextEditingController textController;
   final VoidCallback onPressSend;
   final FocusNode node;
+  bool isShowSendButton;
+  bool isRecording;
   final LinearGradient? linearGradient;
+  final Function(String) onChanged;
   final bool isInvertedGradient;
   final Alignment alignmentBegin;
   final Alignment alignmentEnd;
@@ -23,10 +26,12 @@ class ChatFooter extends StatelessWidget {
   final Color? placeHolderColor;
   final Color? FooterContainerColor;
 
-  const ChatFooter({
+  ChatFooter({
     required this.textController,
     required this.onPressSend,
     required this.node,
+    this.isShowSendButton = false,
+    this.isRecording = false,
     this.linearGradient,
     this.isInvertedGradient = false,
     this.alignmentBegin = Alignment.topCenter,
@@ -41,6 +46,7 @@ class ChatFooter extends StatelessWidget {
     this.placeHolderColor,
     this.FooterContainerColor = Colors.transparent,
     Key? key,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -62,6 +68,7 @@ class ChatFooter extends StatelessWidget {
             flex: 6,
             child: TextFieldWithIcon(
               node: node,
+              onChanged: onChanged,
               controller: textController,
               onPressSuffix: () => onPressGift(),
               isSuffixIcon: true,
@@ -93,7 +100,11 @@ class ChatFooter extends StatelessWidget {
               child: IconButtonWithGradientBackground(
                 onPressed: () => onPressSend(),
                 linearGradient: linearGradient,
-                icon: Icons.send_rounded,
+                icon: isShowSendButton
+                    ? Icons.send_rounded
+                    : isRecording
+                        ? Icons.close
+                        : Icons.mic,
                 iconSize: Helper.dynamicFont(context, 0.13),
                 alignmentBegin: alignmentBegin,
                 alignmentEnd: alignmentEnd,

@@ -185,33 +185,39 @@ class _EditCardScreenState extends State<EditCardScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _cardHolderController,
                           node: emailNode,
-                          placeHolder: "Email",
+                          placeHolder: "Card Holder Name",
                         ),
                         SizedBox(
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _creditCardController,
+                          keyboardType: TextInputType.number,
                           node: cityNode,
-                          placeHolder: "city",
+                          placeHolder: "Credit Card Number",
                         ),
                         SizedBox(
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _expirationController,
                           node: stateNode,
-                          placeHolder: "state",
+                          placeHolder: "Expiration Date",
                         ),
                         SizedBox(
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _cvvController,
+                          keyboardType: TextInputType.number,
                           node: countryNode,
-                          placeHolder: "country",
+                          placeHolder: "CCV",
                         ),
                         SizedBox(
                           height: Helper.dynamicHeight(context, 3),

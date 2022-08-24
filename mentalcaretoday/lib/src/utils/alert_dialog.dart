@@ -274,6 +274,7 @@ class ShowDialogBox {
                     padding: EdgeInsets.symmetric(
                         horizontal: Helper.dynamicWidth(context, 5)),
                     child: TextFieldWithIcon(
+                      onChanged: ((p0) {}),
                       controller: controller,
                       placeHolder: "Share your thought",
                       maxLines: 3,

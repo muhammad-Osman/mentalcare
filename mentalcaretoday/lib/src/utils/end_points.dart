@@ -40,3 +40,5 @@ const getSingleRecordingUrl =
     "https://cowbotics.alliancetechltd.com/api/user/recording/";
 const addRecordingUrl =
     "https://cowbotics.alliancetechltd.com/api/user/recording";
+const allUserUrl = "https://cowbotics.alliancetechltd.com/api/user/search";
+const getUserByIdUrl = "https://cowbotics.alliancetechltd.com/api/user/";

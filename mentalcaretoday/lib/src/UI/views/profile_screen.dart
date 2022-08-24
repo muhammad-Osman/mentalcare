@@ -313,6 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Expanded(
                               child: TextFieldWithIcon(
+                                onChanged: ((p0) {}),
                                 controller: _firstNameController,
                                 node: firstNnode,
                                 placeHolder: "First Name",
@@ -323,6 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Expanded(
                               child: TextFieldWithIcon(
+                                onChanged: ((p0) {}),
                                 controller: _lastNameController,
                                 node: lastNnode,
                                 placeHolder: "Last Name",
@@ -334,6 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _emailController,
                           node: emailNode,
                           placeHolder: "Email",
@@ -344,6 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         InkWell(
                           onTap: () => _selectDate(context),
                           child: TextFieldWithIcon(
+                            onChanged: ((p0) {}),
                             controller: _dobController,
                             node: dobNode,
                             enabledfield: false,
@@ -410,6 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _cityController,
                           node: cityNode,
                           placeHolder: "city",
@@ -418,6 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _stateController,
                           node: stateNode,
                           placeHolder: "state",
@@ -426,6 +432,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: Helper.dynamicHeight(context, 3),
                         ),
                         TextFieldWithIcon(
+                          onChanged: ((p0) {}),
                           controller: _countryController,
                           node: countryNode,
                           placeHolder: "country",
