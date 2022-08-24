@@ -16,7 +16,7 @@ import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:record_mp3/record_mp3.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/single_music.dart';
@@ -990,55 +990,6 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
       }
     }
     return true;
-  }
-
-  void startRecord() async {
-    bool hasPermission = await checkPermission();
-    if (hasPermission) {
-      statusText = "Recording...";
-      recordFilePath = await getFilePath();
-      isComplete = false;
-      RecordMp3.instance.start(recordFilePath!, (type) {
-        statusText = "Record error--->$type";
-        setState(() {});
-      });
-    } else {
-      statusText = "No microphone permission";
-    }
-    setState(() {});
-  }
-
-  void pauseRecord() {
-    if (RecordMp3.instance.status == RecordStatus.PAUSE) {
-      bool s = RecordMp3.instance.resume();
-      if (s) {
-        statusText = "Recording...";
-        setState(() {});
-      }
-    } else {
-      bool s = RecordMp3.instance.pause();
-      if (s) {
-        statusText = "Recording pause...";
-        setState(() {});
-      }
-    }
-  }
-
-  void stopRecord() {
-    bool s = RecordMp3.instance.stop();
-    if (s) {
-      statusText = "Record complete";
-      isComplete = true;
-      setState(() {});
-    }
-  }
-
-  void resumeRecord() {
-    bool s = RecordMp3.instance.resume();
-    if (s) {
-      statusText = "Recording...";
-      setState(() {});
-    }
   }
 
   String? recordFilePath;
