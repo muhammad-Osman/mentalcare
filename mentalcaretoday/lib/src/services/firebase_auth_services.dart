@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mentalcaretoday/src/UI/views/sign_up_screen.dart';
 
 import '../utils/utils.dart';
 import 'auth_services.dart';
@@ -32,18 +33,9 @@ class FBServices {
 
         if (userCredential.user != null) {
           if (userCredential.additionalUserInfo!.isNewUser) {
-            authService.signUpUser(
-                context: context,
-                firstName: userCredential.user!.displayName!,
-                lastName: userCredential.user!.displayName!,
-                dob: "02-08-1990",
-                city: "XXX",
-                state: "XXX",
-                gender: "Male",
-                country: "XXX",
-                email: userCredential.user!.email!,
-                password: "12345678",
-                passwordConfirmation: "12345678");
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                (Route<dynamic> route) => false);
           } else {
             authService.signInGoogle(
                 context: context, email: userCredential.user!.email!);

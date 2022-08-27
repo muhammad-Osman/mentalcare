@@ -33,7 +33,7 @@ class MoodServices {
           'Authorization': "Bearer $token"
         },
       );
-
+      print(userRes.body);
       // ignore: use_build_context_synchronously
 
       httpErrorHandle(

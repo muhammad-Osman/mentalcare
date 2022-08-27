@@ -52,12 +52,13 @@ dependencies:
   permission_handler: ^9.2.0
   flutter_sound: ^9.2.13
   google_sign_in: ^5.2.4
-  firebase_core: ^1.19.1
-  firebase_auth: ^3.4.1
-  cloud_firestore: ^3.2.1
+  firebase_core: ^1.17.1
+  firebase_auth: ^3.3.19
+  cloud_firestore: ^3.4.6
   firebase_storage: ^10.3.1
   uuid: ^3.0.6
   http: ^0.13.4
+  flutter_facebook_auth: ^4.4.1
   
 dev_dependencies:
   flutter_test:

@@ -116,9 +116,17 @@ class AuthService {
               .setUser(user["user"]);
           final userData =
               Provider.of<UserProvider>(context, listen: false).user;
-
+          CurrentMood currentMood = CurrentMood(
+            id: userData.currentMood!.id,
+            name: userData.currentMood!.name,
+            color: userData.currentMood!.color,
+            createdAt: userData.currentMood!.createdAt,
+            updatedAt: userData.currentMood!.updatedAt,
+            deletedAt: userData.currentMood!.deletedAt,
+          );
           User _user = User(
             id: userData.id,
+            currentMoodId: null,
             active: userData.active,
             city: userData.city,
             country: userData.country,
@@ -135,12 +143,14 @@ class AuthService {
             email: userData.email,
             image: userData.image,
             password: userData.password,
+            currentMood: null,
             passwordConfirmation: userData.passwordConfirmation,
           );
+          print(userData.currentMood?.name);
           await firestore
               .collection('users')
-              .doc(userData.id.toString())
-              .set(_user.toMap());
+              .doc("664646")
+              .set({"image": "hdfhfhdhfd"});
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -161,7 +171,9 @@ class AuthService {
     try {
       http.Response res = await http.post(
         Uri.parse(loginUrl),
-        body: jsonEncode({'email': email, "social_auth": true}),
+        body: jsonEncode({
+          'email': email,
+        }),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -184,9 +196,17 @@ class AuthService {
               .setUser(user["user"]);
           final userData =
               Provider.of<UserProvider>(context, listen: false).user;
-
+          CurrentMood currentMood = CurrentMood(
+            id: userData.currentMood!.id,
+            name: userData.currentMood!.name,
+            color: userData.currentMood!.color,
+            createdAt: userData.currentMood!.createdAt,
+            updatedAt: userData.currentMood!.updatedAt,
+            deletedAt: userData.currentMood!.deletedAt,
+          );
           User _user = User(
             id: userData.id,
+            currentMoodId: userData.currentMoodId,
             active: userData.active,
             city: userData.city,
             country: userData.country,
@@ -203,6 +223,7 @@ class AuthService {
             email: userData.email,
             image: userData.image,
             password: userData.password,
+            currentMood: currentMood,
             passwordConfirmation: userData.passwordConfirmation,
           );
           await firestore
@@ -314,6 +335,37 @@ class AuthService {
     }
   }
 
+  // get user data
+  Future<UserTokenResponse?> getUserById(BuildContext context, int id) async {
+    UserTokenResponse? userTokenResponse;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      http.Response userRes = await http.get(
+        Uri.parse("$getUserByIdUrl$id"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+
+      // ignore: use_build_context_synchronously
+      var userProvider = Provider.of<OtherUserProvider>(context, listen: false);
+      final Map<String, dynamic> user = json.decode(userRes.body);
+      print(userRes.body);
+      userTokenResponse = userTokenFromJson(userRes.body);
+    } catch (e) {
+      print("User Not Found");
+      // showSnackBar(context, e.toString());
+    }
+    return userTokenResponse;
+  }
+
 // get user data
   Future<List<User>?> getAllUser(
     BuildContext context,
@@ -334,7 +386,7 @@ class AuthService {
           'Authorization': "Bearer $token"
         },
       );
-
+      print(userRes.body);
       // ignore: use_build_context_synchronously
 
       final Map<String, dynamic> user = json.decode(userRes.body);

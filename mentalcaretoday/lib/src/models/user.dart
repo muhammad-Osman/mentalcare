@@ -4,6 +4,33 @@ import 'dart:convert';
 //     List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
 UserResponse userFromJson(String str) =>
     UserResponse.fromJson(json.decode(str));
+UserTokenResponse userTokenFromJson(String str) =>
+    UserTokenResponse.fromJson(json.decode(str));
+
+class UserTokenResponse {
+  UserTokenResponse({
+    required this.status,
+    required this.user,
+    required this.accessToken,
+  });
+
+  bool status;
+  User user;
+  String accessToken;
+
+  factory UserTokenResponse.fromJson(Map<String, dynamic> json) =>
+      UserTokenResponse(
+        status: json["status"],
+        user: User.fromJson(json["user"]),
+        accessToken: json["access_token"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "user": user.toJson(),
+        "access_token": accessToken,
+      };
+}
 
 class UserResponse {
   UserResponse({required this.status, required this.users});
@@ -40,6 +67,8 @@ class User {
   final String? passwordConfirmation;
   final String? emailVerifiedAt;
   final String? image;
+  String? currentMoodId;
+  CurrentMood? currentMood;
 
   User({
     this.id,
@@ -47,6 +76,8 @@ class User {
     required this.city,
     required this.country,
     this.createdAt,
+    this.currentMoodId,
+    this.currentMood,
     required this.dob,
     this.emailVerifiedAt,
     required this.firstName,
@@ -63,6 +94,31 @@ class User {
   });
 
   Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "first_name": firstName,
+      "last_name": lastName,
+      "password": password,
+      "password_confirmation": passwordConfirmation,
+      "image": image,
+      "email": email,
+      "email_verified_at": emailVerifiedAt,
+      "dob": dob,
+      "gender": gender,
+      "city": city,
+      "state": state,
+      "country": country,
+      "active": active,
+      "last_scene_time": lastSceneTime,
+      "premium": premium,
+      "created_at": createdAt,
+      "updated_at": updatedAt,
+      "current_mood_id": currentMoodId == null ? null : currentMoodId,
+      "current_mood": currentMood == null ? null : currentMood?.toJson(),
+    };
+  }
+
+  Map<String, dynamic> toJsonMap() {
     return {
       "id": id,
       "first_name": firstName,
@@ -105,6 +161,11 @@ class User {
       country: map['country'] ?? '',
       updatedAt: map['updated_at'] ?? '',
       state: map['state'] ?? '',
+      currentMoodId:
+          map["current_mood_id"] == null ? null : map["current_mood_id"],
+      currentMood: map["current_mood"] == null
+          ? null
+          : CurrentMood.fromJson(map["current_mood"]),
     );
   }
 
@@ -153,4 +214,40 @@ class User {
       image: image ?? this.image,
     );
   }
+}
+
+class CurrentMood {
+  CurrentMood({
+    required this.id,
+    required this.name,
+    required this.color,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  int id;
+  String name;
+  String color;
+  dynamic deletedAt;
+  String createdAt;
+  String updatedAt;
+
+  factory CurrentMood.fromJson(Map<String, dynamic> json) => CurrentMood(
+        id: json["id"],
+        name: json["name"],
+        color: json["color"],
+        deletedAt: json["deleted_at"],
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "color": color,
+        "deleted_at": deletedAt,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
+      };
 }
