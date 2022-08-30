@@ -150,10 +150,13 @@ class AuthService {
             passwordConfirmation: userData.passwordConfirmation,
           );
           print(userData.currentMood?.name);
-          await firestore
-              .collection('users')
-              .doc(userData.id.toString())
-              .set(_user.toMap());
+          // await firestore
+          //     .collection('users')
+          //     .doc(userData.id.toString())
+          //     .set(_user.toMap())
+          //     .then((value) => print("User Added"))
+          //     .catchError((error) => print("Failed to add user: $error"));
+          // ;
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -235,6 +238,7 @@ class AuthService {
               .collection('users')
               .doc(userData.id.toString())
               .set(_user.toMap());
+
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -476,6 +480,8 @@ class AuthService {
         }
       }
 
+      // print(imageUrls[0]);
+
       User user = User(
         city: city,
         country: country,
@@ -487,6 +493,7 @@ class AuthService {
         email: email,
         image: imageUrls.isNotEmpty ? imageUrls[0] : userProvider.user.image,
       );
+      print(user.image);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
 
@@ -502,7 +509,7 @@ class AuthService {
         },
       );
       final Map<String, dynamic> userUpadate = json.decode(res.body);
-
+      print(res.body);
       Provider.of<UserProvider>(context, listen: false)
           .setUser(userUpadate["user"]);
       httpErrorHandle(

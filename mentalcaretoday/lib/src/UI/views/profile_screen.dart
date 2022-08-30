@@ -43,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void updateUser() async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
       isLoading = true;
     });
@@ -53,7 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       dob: _dobController.text.toString(),
       city: _cityController.text.toString(),
       state: _stateController.text.toString(),
-      gender: _radioValue == 0 ? "Male" : "Female",
+      gender: _radioValue != null
+          ? _radioValue == 1
+              ? "Male"
+              : "Female"
+          : userProvider.user.gender,
       country: _countryController.text.toString(),
       email: _emailController.text.toString(),
       images: images,
@@ -181,8 +186,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var userProvider = Provider.of<UserProvider>(
       context,
     );
+    print(userProvider.user.gender);
     int male = userProvider.user.gender == "Male" ? 1 : 0;
-    int female = userProvider.user.gender == "Female" ? 1 : 0;
+    int female = userProvider.user.gender == "Female" ? 0 : 1;
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -253,26 +259,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(
                                 Helper.dynamicFont(context, 5),
                               ),
-                              child: Image.network(
-                                userProvider.user.image == ""
-                                    ? "https://cowbotics.alliancetechltd.com/img/default.png"
-                                    : userProvider.user.image!,
-                                fit: BoxFit.cover,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Padding(
-                                    padding: EdgeInsets.all(
-                                        Helper.dynamicFont(context, 1.5)),
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.blue,
-                                      ),
+                              child: images.isNotEmpty
+                                  ? Image.file(images[0])
+                                  : Image.network(
+                                      userProvider.user.image == ""
+                                          ? "https://cowbotics.alliancetechltd.com/img/default.png"
+                                          : userProvider.user.image!,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Padding(
+                                          padding: EdgeInsets.all(
+                                              Helper.dynamicFont(context, 1.5)),
+                                          child: const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
                             ),
                           ),
                         ),
@@ -376,6 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onChanged: (newValue) {
                                 setState(() {
                                   _radioValue = newValue as int;
+                                  print(_radioValue);
                                 });
                               },
                             ),
@@ -391,6 +401,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onChanged: (newValue) {
                                 setState(() {
                                   _radioValue = newValue as int;
+                                  print(_radioValue);
                                 });
                               },
                             ),

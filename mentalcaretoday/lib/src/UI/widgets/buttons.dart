@@ -100,13 +100,13 @@ class ButtonWithGradientBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return isLoading
         ? Shimmer.fromColors(
-            baseColor: Colors.grey.shade400,
-            highlightColor: Colors.grey.shade300,
+            baseColor: Color.fromRGBO(141, 227, 216, 1.0),
+            highlightColor: Color.fromRGBO(126, 194, 220, 1.0),
             child: Container(
               height: Helper.dynamicHeight(context, buttonHeight),
               width: Helper.dynamicWidth(context, buttonWidth),
               decoration: BoxDecoration(
-                color: Colors.grey.shade400,
+                color: Color.fromRGBO(126, 194, 220, 1.0),
                 border: Border.all(
                   color: Colors.transparent,
                   width: 0,

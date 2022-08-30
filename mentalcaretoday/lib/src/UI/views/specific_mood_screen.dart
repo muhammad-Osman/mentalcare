@@ -286,6 +286,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                     onPressedMusic: () {
                       setState(() {
                         selectIndex = index;
+                        isRecordedValue = false;
                       });
                       Navigator.of(context).pop();
                     },

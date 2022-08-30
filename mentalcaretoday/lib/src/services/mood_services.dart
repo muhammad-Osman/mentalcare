@@ -15,7 +15,7 @@ import '../utils/utils.dart';
 
 class MoodServices {
   // get user Card
-  Future<allMood.Mood> getMoods(
+  Future<allMood.Mood?> getMoods(
     BuildContext context,
   ) async {
     allMood.Mood? getMoods;
@@ -50,7 +50,7 @@ class MoodServices {
       // showSnackBar(context, e.toString());
     }
 
-    return getMoods!;
+    return getMoods;
   }
 
   Future<SingleMood> getSingleMood(BuildContext context, int id) async {
