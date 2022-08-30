@@ -57,6 +57,16 @@ class _UsersScreenState extends State<UsersScreen> {
     });
   }
 
+  void searchUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    userList = await _authService.searchUser(context, _searchController.text);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +130,9 @@ class _UsersScreenState extends State<UsersScreen> {
                           height: Helper.dynamicHeight(context, 7),
                           width: Helper.dynamicWidth(context, 88),
                           child: TextFieldWithIcon(
-                            onChanged: ((p0) {}),
+                            onChanged: ((p0) {
+                              searchUser();
+                            }),
                             controller: _searchController,
                             node: searchNode,
                             placeHolder: "Search",

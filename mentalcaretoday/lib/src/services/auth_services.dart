@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../UI/views/sign_in_screen.dart';
+import '../UI/views/sign_up_screen.dart';
 import '../models/user.dart';
 import '../provider/other_user_provider.dart';
 import '../provider/user_provider.dart';
@@ -49,6 +50,8 @@ class AuthService {
         gender: gender,
         lastName: lastName,
         lastSceneTime: null,
+        currentMood: null,
+        currentMoodId: null,
         premium: false,
         state: state,
         updatedAt: "",
@@ -126,7 +129,7 @@ class AuthService {
           );
           User _user = User(
             id: userData.id,
-            currentMoodId: null,
+            currentMoodId: userData.currentMoodId,
             active: userData.active,
             city: userData.city,
             country: userData.country,
@@ -143,14 +146,14 @@ class AuthService {
             email: userData.email,
             image: userData.image,
             password: userData.password,
-            currentMood: null,
+            currentMood: currentMood,
             passwordConfirmation: userData.passwordConfirmation,
           );
           print(userData.currentMood?.name);
           await firestore
               .collection('users')
-              .doc("664646")
-              .set({"image": "hdfhfhdhfd"});
+              .doc(userData.id.toString())
+              .set(_user.toMap());
           await prefs.setString('x-auth-token', user['access_token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -171,9 +174,7 @@ class AuthService {
     try {
       http.Response res = await http.post(
         Uri.parse(loginUrl),
-        body: jsonEncode({
-          'email': email,
-        }),
+        body: jsonEncode({'email': email, "social_auth": true}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -182,7 +183,11 @@ class AuthService {
       print(res.statusCode);
       final Map<String, dynamic> user = json.decode(res.body);
       print(user);
-
+      if (user["message"] == "The user does not exists") {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const SignUpScreen()),
+        );
+      }
       httpErrorHandle(
         response: res,
         context: context,
@@ -381,6 +386,46 @@ class AuthService {
 
       http.Response userRes = await http.get(
         Uri.parse(allUserUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+      print(userRes.body);
+      // ignore: use_build_context_synchronously
+
+      final Map<String, dynamic> user = json.decode(userRes.body);
+
+      httpErrorHandle(
+        response: userRes,
+        context: context,
+        onSuccess: () {
+          userResponse = userFromJson(userRes.body);
+        },
+      );
+      return userResponse!.users;
+    } catch (e) {
+      print("User Not Found");
+      // showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<List<User>?> searchUser(BuildContext context, String name) async {
+    UserResponse? userResponse;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      http.Response userRes = await http.get(
+        Uri.parse(allUserUrl).replace(
+          queryParameters: {
+            "q": name,
+          },
+        ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': "Bearer $token"

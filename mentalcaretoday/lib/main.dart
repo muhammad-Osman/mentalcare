@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import 'src/provider/other_user_provider.dart';
 import 'src/provider/user_provider.dart';
-import 'src/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +44,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadData();
   }
@@ -71,7 +69,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: MyRouter().generateRoute,
       home: isLoading
           ? Scaffold(
-              backgroundColor: Color(0xFF7EC2DC),
+              backgroundColor: const Color(0xFF7EC2DC),
               body: Center(
                 child: Image.asset(
                   "assets/images/logo.png",

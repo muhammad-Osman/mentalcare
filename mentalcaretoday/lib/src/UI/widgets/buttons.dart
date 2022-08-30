@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
+import 'package:shimmer/shimmer.dart';
 import 'text.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -97,50 +98,69 @@ class ButtonWithGradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Helper.dynamicHeight(context, buttonHeight),
-      width: Helper.dynamicWidth(context, buttonWidth),
-      decoration: BoxDecoration(
-        boxShadow: isBoxShadow
-            ? [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 4,
-                  offset: const Offset(0, 3), // changes position of shadow
+    return isLoading
+        ? Shimmer.fromColors(
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              height: Helper.dynamicHeight(context, buttonHeight),
+              width: Helper.dynamicWidth(context, buttonWidth),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade400,
+                border: Border.all(
+                  color: Colors.transparent,
+                  width: 0,
                 ),
-              ]
-            : null,
-        gradient: linearGradient,
-        border: Border.all(
-          color: Colors.transparent,
-          width: 0,
-        ),
-        borderRadius:
-            BorderRadius.circular(Helper.dynamicFont(context, radius)),
-      ),
-      child: ClipRRect(
-        borderRadius:
-            BorderRadius.circular(Helper.dynamicFont(context, radius)),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius:
-              BorderRadius.circular(Helper.dynamicFont(context, radius)),
-          child: isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : InkWell(
-                  onTap: () => onPressed(),
-                  child: Center(
-                    child: ButtonTextWidget(
-                      text: text,
-                      fontSize: fontSize,
-                      regularFont: regularFont,
-                      color: color,
-                    ),
-                  ),
-                ),
-        ),
-      ),
-    );
+                borderRadius:
+                    BorderRadius.circular(Helper.dynamicFont(context, radius)),
+              ),
+            ),
+          )
+        : Container(
+            height: Helper.dynamicHeight(context, buttonHeight),
+            width: Helper.dynamicWidth(context, buttonWidth),
+            decoration: BoxDecoration(
+              boxShadow: isBoxShadow
+                  ? [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ]
+                  : null,
+              gradient: linearGradient,
+              border: Border.all(
+                color: Colors.transparent,
+                width: 0,
+              ),
+              borderRadius:
+                  BorderRadius.circular(Helper.dynamicFont(context, radius)),
+            ),
+            child: ClipRRect(
+              borderRadius:
+                  BorderRadius.circular(Helper.dynamicFont(context, radius)),
+              child: Material(
+                color: Colors.transparent,
+                borderRadius:
+                    BorderRadius.circular(Helper.dynamicFont(context, radius)),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : InkWell(
+                        onTap: () => onPressed(),
+                        child: Center(
+                          child: ButtonTextWidget(
+                            text: text,
+                            fontSize: fontSize,
+                            regularFont: regularFont,
+                            color: color,
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+          );
   }
 }
 

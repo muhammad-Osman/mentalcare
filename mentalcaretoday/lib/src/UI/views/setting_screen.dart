@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentalcaretoday/src/UI/widgets/account_settings_tile.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
+import 'package:mentalcaretoday/src/UI/widgets/delete_dialog.dart';
+import 'package:mentalcaretoday/src/UI/widgets/logout_dialog.dart';
 import 'package:mentalcaretoday/src/UI/widgets/more_list_tile.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/routes/index.dart';
@@ -11,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../provider/user_provider.dart';
-import '../../services/auth_services.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -21,7 +23,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final AuthService _authService = AuthService();
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(
@@ -232,7 +233,12 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            _authService.logoutUser(context: context);
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) {
+                                  return const LogoutDialog();
+                                });
+                            // _authService.logoutUser(context: context);
                           },
                           child: MoreListTile(
                             title: "Log-out",
@@ -241,7 +247,11 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            _authService.deleteAccount(context: context);
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) {
+                                  return const DeleteDialog();
+                                });
                           },
                           child: MoreListTile(
                             title: "Delete Account",

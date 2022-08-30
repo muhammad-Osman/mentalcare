@@ -33,9 +33,9 @@ class FBServices {
 
         if (userCredential.user != null) {
           if (userCredential.additionalUserInfo!.isNewUser) {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const SignUpScreen()),
-                (Route<dynamic> route) => false);
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+            );
           } else {
             authService.signInGoogle(
                 context: context, email: userCredential.user!.email!);

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -126,7 +127,7 @@ class MoodServices {
 
   Future addrecording({
     required BuildContext context,
-    required final String path,
+    required final File path,
     required final String affirmationId,
     required final String name,
   }) async {
@@ -143,11 +144,16 @@ class MoodServices {
       request.fields["affirmation_id"] = affirmationId;
       request.fields["name"] = name;
       //for token
-      request.headers.addAll({"Authorization": "Bearer $token"});
+      request.headers.addAll({
+        "Authorization": "Bearer $token",
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
 
       //for image and videos and files
-
-      request.files.add(await http.MultipartFile.fromPath("recording", path));
+      print(path.path.split("/").last);
+      request.files.add(http.MultipartFile.fromBytes(
+          'recording', path.readAsBytesSync(),
+          filename: path.path.split("/").last));
 
       //for completeing the request
       var response = await request.send();
@@ -163,14 +169,8 @@ class MoodServices {
         onSuccess: () {
           showSnackBar(
             context,
-            'Payment Detail Added Successfuly!',
+            'Recording Added Successfuly!',
           );
-          Navigator.of(context).pop();
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ));
         },
       );
     } catch (e) {

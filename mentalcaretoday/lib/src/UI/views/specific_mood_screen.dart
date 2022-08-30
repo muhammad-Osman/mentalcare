@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
 import 'package:mentalcaretoday/src/UI/widgets/draggable_sheet.dart';
@@ -16,10 +17,13 @@ import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:record_mp3/record_mp3.dart';
 
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/single_music.dart';
+import '../../provider/user_provider.dart';
 import '../../services/afrimation_page_manger.dart';
 import '../../services/mood_services.dart';
 
@@ -48,47 +52,8 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
     afrimationPageManger = AfrimationPageManger();
     fetchMoods();
     // recorder.init();
-
-    _soundRecorder = FlutterSoundRecorder();
-    openAudio();
   }
 
-  void openAudio() async {
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Mic permission not allowed!');
-    }
-    await _soundRecorder!.openRecorder();
-    isRecorderInit = true;
-  }
-
-  void recordAudio() async {
-    var tempDir = await getTemporaryDirectory();
-    var path = '${tempDir.path}/flutter_sound.aac';
-
-    if (!isRecorderInit) {
-      return;
-    }
-    if (isRecording) {
-      final mypath = await _soundRecorder!.stopRecorder();
-      final audioFile = File(mypath!);
-      _moodServices.addrecording(
-          context: context,
-          path: mypath,
-          affirmationId: "1",
-          name: "abdul teseting");
-    } else {
-      await _soundRecorder!.startRecorder(
-        toFile: path,
-      );
-    }
-
-    setState(() {
-      isRecording = !isRecording;
-    });
-  }
-
-  FlutterSoundRecorder? _soundRecorder;
   bool isRecorderInit = false;
   int selectIndex = 0;
   int recordedSelectedIndex = 0;
@@ -175,8 +140,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
               },
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 10,
+              itemCount: _singleMusic!.frequencies!.length,
               itemBuilder: (context, index) {
+                final frequencyData = _singleMusic!.frequencies![index];
                 return Row(
                   children: [
                     Transform.scale(
@@ -193,7 +159,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                       ),
                     ),
                     TextWidget(
-                      text: "456 Hz",
+                      text: frequencyData.frequency,
                       color: R.color.dark_black,
                       fontSize: 1.1,
                       fontFamily: R.fonts.latoRegular,
@@ -336,6 +302,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
   @override
   Widget build(BuildContext context) {
     // final isRecording = recorder.isRecording;
+    var userProvider = Provider.of<UserProvider>(
+      context,
+    );
     print(selectIndex);
     return Scaffold(
       body: SizedBox(
@@ -739,8 +708,12 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                                 _checkboxAffirmation = !_checkboxAffirmation;
                               });
                               if (_checkboxAffirmation) {
-                                afrimationPageManger.setURl(_singleMusic!
-                                    .affirmations![selectIndex].path!);
+                                afrimationPageManger.setURl(isRecordedValue
+                                    ? _singleMusic!
+                                        .recordings![recordedSelectedIndex]
+                                        .path!
+                                    : _singleMusic!
+                                        .affirmations![selectIndex].path!);
                                 afrimationPageManger.play();
                               } else {
                                 afrimationPageManger.pause();
@@ -792,27 +765,52 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                     Positioned(
                       top: Helper.dynamicHeight(context, 35),
                       left: Helper.dynamicWidth(context, 90),
-                      child: GestureDetector(
-                        onTap: () async {
-                          // await recorder.toggleRecording();
-                          setState(() {});
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            recordAudio();
-                          },
-                          child: SizedBox(
-                            width: Helper.dynamicWidth(context, 7),
-                            height: Helper.dynamicHeight(context, 7),
-                            child: isRecording
-                                ? const Icon(Icons.pause)
-                                : SvgPicture.asset(
-                                    R.image.mic,
-                                    fit: BoxFit.contain,
-                                  ),
-                          ),
-                        ),
-                      ),
+                      child: userProvider.user.premium!
+                          ? GestureDetector(
+                              onTap: () async {
+                                if (isRecording) {
+                                  await stopRecord();
+                                  play();
+                                } else {
+                                  startRecord();
+                                }
+                                setState(() {
+                                  isRecording = !isRecording;
+                                });
+                                // recordAudio();
+                              },
+                              child: SizedBox(
+                                width: Helper.dynamicWidth(context, 7),
+                                height: Helper.dynamicHeight(context, 7),
+                                child: isRecording
+                                    ? const Icon(Icons.pause)
+                                    : SvgPicture.asset(
+                                        R.image.mic,
+                                        fit: BoxFit.contain,
+                                      ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () async {
+                                Fluttertoast.showToast(
+                                    msg: "Please Purchase Subcription",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: const Color.fromRGBO(
+                                        126, 194, 220, 1.0),
+                                    textColor: Colors.white,
+                                    fontSize: 12.0);
+                              },
+                              child: SizedBox(
+                                width: Helper.dynamicWidth(context, 7),
+                                height: Helper.dynamicHeight(context, 7),
+                                child: SvgPicture.asset(
+                                  R.image.mic,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
                     ),
                     Positioned(
                       top: Helper.dynamicHeight(context, 40),
@@ -917,12 +915,8 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                                       case ButtonState.paused:
                                         return PlayButton(
                                           ontap: () {
-                                            _pageManager.setURL(isRecordedValue
-                                                ? _singleMusic!
-                                                    .recordings![
-                                                        recordedSelectedIndex]
-                                                    .path!
-                                                : _singleMusic!.music!.path!);
+                                            _pageManager.setURL(
+                                                _singleMusic!.music!.path!);
                                             _pageManager.play();
                                           },
                                           icon: Icons.play_arrow_rounded,
@@ -994,10 +988,63 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
 
   String? recordFilePath;
 
+  Future startRecord() async {
+    bool hasPermission = await checkPermission();
+    if (hasPermission) {
+      statusText = "Recording...";
+      recordFilePath = await getFilePath();
+      isComplete = false;
+      RecordMp3.instance.start(recordFilePath!, (type) {
+        statusText = "Record error--->$type";
+        setState(() {});
+      });
+    } else {
+      statusText = "No microphone permission";
+    }
+    setState(() {});
+  }
+
+  void pauseRecord() {
+    if (RecordMp3.instance.status == RecordStatus.PAUSE) {
+      bool s = RecordMp3.instance.resume();
+      if (s) {
+        statusText = "Recording...";
+        setState(() {});
+      }
+    } else {
+      bool s = RecordMp3.instance.pause();
+      if (s) {
+        statusText = "Recording pause...";
+        setState(() {});
+      }
+    }
+  }
+
+  Future stopRecord() async {
+    bool s = RecordMp3.instance.stop();
+    if (s) {
+      statusText = "Record complete";
+      isComplete = true;
+      setState(() {});
+    }
+  }
+
+  void resumeRecord() {
+    bool s = RecordMp3.instance.resume();
+    if (s) {
+      statusText = "Recording...";
+      setState(() {});
+    }
+  }
+
   void play() {
     if (recordFilePath != null && File(recordFilePath!).existsSync()) {
-      AudioPlayer audioPlayer = AudioPlayer();
-      audioPlayer.play();
+      print(recordFilePath);
+      _moodServices.addrecording(
+          context: context,
+          path: File(recordFilePath!),
+          affirmationId: "1",
+          name: "recording");
     }
   }
 

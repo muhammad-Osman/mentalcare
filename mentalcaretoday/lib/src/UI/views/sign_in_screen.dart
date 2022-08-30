@@ -24,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final FBServices _fbServices = FBServices();
-  late ProgressDialog pr;
+
   FocusNode emailNode = FocusNode();
   FocusNode passwordNode = FocusNode();
 
@@ -56,27 +56,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    pr = ProgressDialog(context);
   }
 
   bool isLoading = false;
   void signInUser() async {
-    pr.style(
-        elevation: 10,
-        insetAnimCurve: Curves.easeInOut,
-        backgroundColor: Color(0xFF4B66EA),
-        message: "Please wait!",
-        messageTextStyle: TextStyle(color: Colors.white, fontSize: 13),
-        progressWidget: Center(
-            child: CircularProgressIndicator(
-          color: Colors.white,
-        )));
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
-
-    await pr.show();
     setState(() {
       isLoading = true;
     });
@@ -85,7 +69,8 @@ class _SignInScreenState extends State<SignInScreen> {
       email: emailController.text,
       password: passwordController.text,
     );
-    await pr.hide();
+    await Future.delayed(const Duration(seconds: 3));
+
     setState(() {
       isLoading = false;
     });
@@ -175,14 +160,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(
                     height: Helper.dynamicHeight(context, 4),
                   ),
-                  ButtonWithGradientBackground(
-                    text: "Login",
-                    onPressed: () {
-                      if (_signInFormKey.currentState!.validate()) {
-                        signInUser();
-                      }
-                    },
-                  ),
+                  isLoading
+                      ? ButtonWithGradientBackground(
+                          isLoading: true,
+                          text: "SIGN UP",
+                          onPressed: () {},
+                        )
+                      : ButtonWithGradientBackground(
+                          text: "Login",
+                          onPressed: () {
+                            if (_signInFormKey.currentState!.validate()) {
+                              signInUser();
+                            }
+                          },
+                        ),
                   SizedBox(
                     height: Helper.dynamicHeight(context, 3),
                   ),

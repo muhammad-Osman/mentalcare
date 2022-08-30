@@ -122,7 +122,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     pr = ProgressDialog(context);
   }
@@ -165,20 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       isLoading = true;
     });
-    pr.style(
-        elevation: 10,
-        insetAnimCurve: Curves.easeInOut,
-        backgroundColor: Color(0xFF4B66EA),
-        message: "Please wait!",
-        messageTextStyle: TextStyle(color: Colors.white, fontSize: 13),
-        progressWidget: Center(
-            child: CircularProgressIndicator(
-          color: Colors.white,
-        )));
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
 
-    await pr.show();
     await authService.signUpUser(
       context: context,
       firstName: _firstNameController.text,
@@ -192,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       password: _passwordController.text,
       passwordConfirmation: _confirmPasswordController.text,
     );
-    await pr.hide();
+    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       isLoading = false;
     });

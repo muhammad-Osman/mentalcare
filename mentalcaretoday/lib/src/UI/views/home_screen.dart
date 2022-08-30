@@ -258,7 +258,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER,
                           timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
+                          backgroundColor:
+                              const Color.fromRGBO(126, 194, 220, 1.0),
                           textColor: Colors.white,
                           fontSize: 12.0);
                     } else {

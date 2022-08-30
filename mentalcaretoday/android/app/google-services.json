@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "743282725393",
-    "project_id": "mental-care-36c7f",
-    "storage_bucket": "mental-care-36c7f.appspot.com"
+    "project_number": "367472766997",
+    "project_id": "mental-care-6c1f7",
+    "storage_bucket": "mental-care-6c1f7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:743282725393:android:0265cf2d3b013f550f17b0",
+        "mobilesdk_app_id": "1:367472766997:android:8c050b34babf403d8fde1c",
         "android_client_info": {
           "package_name": "com.mentalcaretoday.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "743282725393-d06713fkhee686g3nhjdplt92uoogp0a.apps.googleusercontent.com",
+          "client_id": "367472766997-bu1j71ojre98cbtagl5rol462dhj4pek.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDBhahJVDZgk1knJIjASou1F3QUgHcmEwE"
+          "current_key": "AIzaSyC142L44-ez-ccq5aQT5RULMCGEnR1lrLo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "743282725393-d06713fkhee686g3nhjdplt92uoogp0a.apps.googleusercontent.com",
+              "client_id": "367472766997-bu1j71ojre98cbtagl5rol462dhj4pek.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

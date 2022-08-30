@@ -32,20 +32,16 @@ class ChatRepository {
       List<ChatContact> contacts = [];
       for (var document in event.docs) {
         var chatContact = ChatContact.fromMap(document.data());
-        // var userData = await firestore
-        //     .collection('users')
-        //     .doc(chatContact.contactId)
-        //     .get();
-        // var user = User.fromMap(userData.data()!);
-        UserTokenResponse? userTokenResponse = await authService.getUserById(
-            context, int.parse(chatContact.contactId));
-        // var otherUser =
-        //     Provider.of<OtherUserProvider>(context, listen: false).user;
-        print("hi bro${userTokenResponse?.user.firstName}");
+        var userData = await firestore
+            .collection('users')
+            .doc(chatContact.contactId)
+            .get();
+        var user = User.fromMap(userData.data()!);
+
         contacts.add(
           ChatContact(
-            name: userTokenResponse!.user.firstName,
-            profilePic: userTokenResponse.user.image!,
+            name: user.firstName,
+            profilePic: user.image!,
             contactId: chatContact.contactId,
             timeSent: chatContact.timeSent,
             lastMessage: chatContact.lastMessage,
