@@ -469,16 +469,16 @@ class AuthService {
   }) async {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      final cloudinary = CloudinaryPublic('dddunvhux', 'ku2vssmn');
-      List<String> imageUrls = [];
-      if (images!.isNotEmpty) {
-        for (int i = 0; i < images.length; i++) {
-          CloudinaryResponse res = await cloudinary.uploadFile(
-            CloudinaryFile.fromFile(images[i].path, folder: "profile"),
-          );
-          imageUrls.add(res.secureUrl);
-        }
-      }
+      //   final cloudinary = CloudinaryPublic('dddunvhux', 'ku2vssmn');
+      //   List<String> imageUrls = [];
+      //   if (images!.isNotEmpty) {
+      //     for (int i = 0; i < images.length; i++) {
+      //       CloudinaryResponse res = await cloudinary.uploadFile(
+      //         CloudinaryFile.fromFile(images[i].path, folder: "profile"),
+      //       );
+      //       imageUrls.add(res.secureUrl);
+      //     }
+      //   }
 
       // print(imageUrls[0]);
 
@@ -491,7 +491,7 @@ class AuthService {
         lastName: lastName,
         state: state,
         email: email,
-        image: imageUrls.isNotEmpty ? imageUrls[0] : userProvider.user.image,
+        image: userProvider.user.image,
       );
       print(user.image);
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -500,16 +500,35 @@ class AuthService {
       if (token == null) {
         prefs.setString('x-auth-token', '');
       }
-      http.Response res = await http.post(
-        Uri.parse(updateProfileUrl),
-        body: user.toJson(),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': "Bearer $token"
-        },
-      );
+      //for multipartrequest
+      var request = http.MultipartRequest('POST', Uri.parse(updateProfileUrl));
+      request.fields["first_name"] = user.firstName;
+      request.fields["last_name"] = user.lastName;
+      request.fields["dob"] = user.dob;
+      request.fields["gender"] = user.gender;
+      request.fields["city"] = user.city;
+      request.fields["state"] = user.state;
+      request.fields["country"] = user.country;
+      //for token
+      request.headers.addAll({
+        "Authorization": "Bearer $token",
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      //for image and videos and files
+      if (images!.isNotEmpty) {
+        request.files.add(http.MultipartFile.fromBytes(
+            'profile_picture', images[0].readAsBytesSync(),
+            filename: images[0].path.split("/").last));
+      }
+
+      //for completeing the request
+      var response = await request.send();
+
+      //for getting and decoding the response into json format
+      var res = await http.Response.fromStream(response);
       final Map<String, dynamic> userUpadate = json.decode(res.body);
-      print(res.body);
+
       Provider.of<UserProvider>(context, listen: false)
           .setUser(userUpadate["user"]);
       httpErrorHandle(

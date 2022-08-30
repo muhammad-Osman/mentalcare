@@ -48,13 +48,14 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
   @override
   void initState() {
     super.initState();
-    _pageManager = PageManager();
+
     afrimationPageManger = AfrimationPageManger();
     fetchMoods();
     // recorder.init();
   }
 
   bool isRecorderInit = false;
+  bool isShow = false;
   int selectIndex = 0;
   int recordedSelectedIndex = 0;
   bool isRecording = false;
@@ -69,7 +70,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
       isLoading = true;
     });
     _singleMusic = await _moodServices.getSingleMusic(context, widget.id);
-
+    _pageManager = PageManager(_singleMusic!.music!.path!);
     setState(() {
       isLoading = false;
     });
@@ -82,7 +83,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
     // recorder.dispose();
   }
 
-  _frequencyDialog(BuildContext context, StateSetter setState) {
+  _frequencyDialog(
+    BuildContext context,
+  ) {
     showModalBottomSheet(
       enableDrag: false,
       context: context,
@@ -100,7 +103,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
           builder: (context, setState) => Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: SizedBox(
-              child: _frequencySheet(context, setState),
+              child: _frequencySheet(
+                context,
+              ),
             ),
           ),
         );
@@ -108,7 +113,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
     );
   }
 
-  _frequencySheet(BuildContext context, StateSetter setState) {
+  _frequencySheet(
+    BuildContext context,
+  ) {
     return CustomDraggableScrollableSheet(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +203,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
           builder: (context, setState) => Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: SizedBox(
-              child: _affirmationsSheet(context, setState),
+              child: _affirmationsSheet(
+                context,
+              ),
             ),
           ),
         );
@@ -204,7 +213,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
     );
   }
 
-  _affirmationsSheet(BuildContext context, StateSetter setState) {
+  _affirmationsSheet(
+    BuildContext context,
+  ) {
     return CustomDraggableScrollableSheet(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +254,16 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                             setState(() {
                               recordedSelectedIndex = index;
                               isRecordedValue = true;
+                              isShow = true;
                             });
+                            if (_checkboxAffirmation) {
+                              afrimationPageManger.setURl(isRecordedValue
+                                  ? _singleMusic!
+                                      .recordings![recordedSelectedIndex].path!
+                                  : _singleMusic!
+                                      .affirmations![selectIndex].path!);
+                              afrimationPageManger.play();
+                            }
                             Navigator.of(context).pop();
                           },
                           onPressedCross: () {},
@@ -287,7 +307,15 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                       setState(() {
                         selectIndex = index;
                         isRecordedValue = false;
+                        isShow = true;
                       });
+                      if (_checkboxAffirmation) {
+                        afrimationPageManger.setURl(isRecordedValue
+                            ? _singleMusic!
+                                .recordings![recordedSelectedIndex].path!
+                            : _singleMusic!.affirmations![selectIndex].path!);
+                        afrimationPageManger.play();
+                      }
                       Navigator.of(context).pop();
                     },
                   );
@@ -689,7 +717,13 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                             R.color.white,
                           ],
                         ),
-                        text: _singleMusic?.affirmations![0].title ?? "",
+                        text: isShow
+                            ? isRecordedValue
+                                ? _singleMusic!
+                                    .recordings![recordedSelectedIndex].name!
+                                : _singleMusic!
+                                    .affirmations![selectIndex].title!
+                            : _singleMusic?.affirmations![0].title ?? "",
                         color: R.color.dark_black,
                         onPressed: () => _affirmationDialog(context, setState),
                       ),
@@ -887,7 +921,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                                   height: Helper.dynamicHeight(context, 9),
                                   child: InkWell(
                                     onTap: () {
-                                      _frequencyDialog(context, setState);
+                                      _frequencyDialog(
+                                        context,
+                                      );
                                     },
                                     child: SvgPicture.asset(
                                       R.image.frequency,
@@ -916,8 +952,6 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                                       case ButtonState.paused:
                                         return PlayButton(
                                           ontap: () {
-                                            _pageManager.setURL(
-                                                _singleMusic!.music!.path!);
                                             _pageManager.play();
                                           },
                                           icon: Icons.play_arrow_rounded,

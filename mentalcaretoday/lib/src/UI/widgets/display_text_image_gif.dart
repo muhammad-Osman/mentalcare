@@ -31,7 +31,7 @@ class _DisplayTextImageGIFState extends State<DisplayTextImageGIF> {
   @override
   void initState() {
     super.initState();
-    _pageManager = PageManager();
+    _pageManager = PageManager(widget.message);
   }
 
   @override
@@ -83,7 +83,6 @@ class _DisplayTextImageGIFState extends State<DisplayTextImageGIF> {
                           case ButtonState.paused:
                             return GestureDetector(
                               onTap: () {
-                                _pageManager.setURL(widget.message);
                                 _pageManager.play();
                               },
                               child: const Icon(
