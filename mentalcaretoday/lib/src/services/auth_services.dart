@@ -119,17 +119,20 @@ class AuthService {
               .setUser(user["user"]);
           final userData =
               Provider.of<UserProvider>(context, listen: false).user;
+
           CurrentMood currentMood = CurrentMood(
-            id: userData.currentMood!.id,
-            name: userData.currentMood!.name,
-            color: userData.currentMood!.color,
-            createdAt: userData.currentMood!.createdAt,
-            updatedAt: userData.currentMood!.updatedAt,
-            deletedAt: userData.currentMood!.deletedAt,
+            id: userData.currentMood?.id,
+            name: userData.currentMood?.name,
+            color: userData.currentMood?.color,
+            createdAt: userData.currentMood?.createdAt,
+            updatedAt: userData.currentMood?.updatedAt,
+            deletedAt: userData.currentMood?.deletedAt,
           );
           User _user = User(
             id: userData.id,
-            currentMoodId: userData.currentMoodId,
+            currentMoodId: userData.currentMood?.id != null
+                ? userData.currentMoodId
+                : null,
             active: userData.active,
             city: userData.city,
             country: userData.country,
@@ -146,7 +149,7 @@ class AuthService {
             email: userData.email,
             image: userData.image,
             password: userData.password,
-            currentMood: currentMood,
+            currentMood: userData.currentMood?.id != null ? currentMood : null,
             passwordConfirmation: userData.passwordConfirmation,
           );
           print(userData.currentMood?.name);
@@ -205,16 +208,18 @@ class AuthService {
           final userData =
               Provider.of<UserProvider>(context, listen: false).user;
           CurrentMood currentMood = CurrentMood(
-            id: userData.currentMood!.id,
-            name: userData.currentMood!.name,
-            color: userData.currentMood!.color,
-            createdAt: userData.currentMood!.createdAt,
-            updatedAt: userData.currentMood!.updatedAt,
-            deletedAt: userData.currentMood!.deletedAt,
+            id: userData.currentMood?.id,
+            name: userData.currentMood?.name,
+            color: userData.currentMood?.color,
+            createdAt: userData.currentMood?.createdAt,
+            updatedAt: userData.currentMood?.updatedAt,
+            deletedAt: userData.currentMood?.deletedAt,
           );
           User _user = User(
             id: userData.id,
-            currentMoodId: userData.currentMoodId,
+            currentMoodId: userData.currentMood?.id != null
+                ? userData.currentMoodId
+                : null,
             active: userData.active,
             city: userData.city,
             country: userData.country,
@@ -231,7 +236,7 @@ class AuthService {
             email: userData.email,
             image: userData.image,
             password: userData.password,
-            currentMood: currentMood,
+            currentMood: userData.currentMood?.id != null ? currentMood : null,
             passwordConfirmation: userData.passwordConfirmation,
           );
           await firestore

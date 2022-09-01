@@ -9,6 +9,8 @@ import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/mood.dart';
+import '../../models/welcome.dart';
+import '../../services/audio_page_manager.dart';
 import '../../services/mood_services.dart';
 import '../../services/payment_services.dart';
 
@@ -24,12 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final PaymentServices _paymentServices = PaymentServices();
   final MoodServices _moodServices = MoodServices();
   Mood? moodsList;
+  Welcome? getWelcomeSong;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _paymentServices.getUserCardData(context);
+    fetchWelcome();
     fetchMoods();
+    _paymentServices.getUserCardData(context);
   }
 
   bool isLoading = false;
@@ -38,9 +42,32 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
     moodsList = await _moodServices.getMoods(context);
+    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       isLoading = false;
     });
+  }
+
+  late PageManager _pageManager;
+  bool isWelcomeLoading = false;
+  void fetchWelcome() async {
+    setState(() {
+      isWelcomeLoading = true;
+    });
+    getWelcomeSong = await _moodServices.getWelcomeSong(context);
+    await Future.delayed(const Duration(seconds: 3));
+    _pageManager = PageManager(getWelcomeSong!.affirmation.path);
+    _pageManager.play();
+    setState(() {
+      isWelcomeLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageManager.dispose();
   }
 
   @override
@@ -252,6 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   onPressed: () {
+                    _pageManager.dispose();
                     if (_radioValue == null) {
                       Fluttertoast.showToast(
                           msg: "Please Select Mood",
@@ -289,6 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   onPressed: () {
+                    _pageManager.dispose();
                     Navigator.of(context).pushNamed(paymentScreen);
                   },
                 ),
@@ -311,7 +340,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   onPressed: () {
+                    _pageManager.dispose();
                     Navigator.of(context).pushNamed(settingScreen);
+                  },
+                ),
+              ),
+              SizedBox(
+                height: Helper.dynamicHeight(context, 2),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Helper.dynamicWidth(context, 6)),
+                child: ButtonWithGradientBackgroundAndIcons(
+                  text: "Chats",
+                  isChat: true,
+                  color: R.color.dark_black,
+                  fontSize: 1.2,
+                  imagePath: "assets/images/chat.png",
+                  linearGradient: const LinearGradient(
+                    colors: [
+                      Color.fromRGBO(255, 255, 255, 1.0),
+                      Color.fromRGBO(255, 255, 255, 1.0),
+                    ],
+                  ),
+                  onPressed: () {
+                    _pageManager.dispose();
+                    Navigator.of(context).pushNamed(conversationScreen);
                   },
                 ),
               ),

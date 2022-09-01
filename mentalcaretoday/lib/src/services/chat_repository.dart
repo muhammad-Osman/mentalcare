@@ -53,11 +53,10 @@ class ChatRepository {
   }
 
   Stream<List<Message>> getChatStream(
-      String recieverUserId, BuildContext context) {
-    var currentUser = Provider.of<UserProvider>(context, listen: false).user;
+      String recieverUserId, String currentUserId) {
     return firestore
         .collection('users')
-        .doc(currentUser.id.toString())
+        .doc(currentUserId)
         .collection('chats')
         .doc(recieverUserId)
         .collection('messages')

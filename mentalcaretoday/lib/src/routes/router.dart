@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentalcaretoday/src/UI/views/add_card.dart';
 import 'package:mentalcaretoday/src/UI/views/chat_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/conversation_screen.dart';
 import 'package:mentalcaretoday/src/UI/views/created_at_screen.dart';
@@ -71,6 +72,12 @@ class MyRouter {
         return MaterialPageRoute(
           builder: (context) =>
               getRouterWithScaleFactor(context, const SettingScreen()),
+          settings: RouteSettings(arguments: settings.arguments),
+        );
+      case addCardScreen:
+        return MaterialPageRoute(
+          builder: (context) =>
+              getRouterWithScaleFactor(context, const AddCardScreen()),
           settings: RouteSettings(arguments: settings.arguments),
         );
       case paymentScreen:

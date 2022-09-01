@@ -167,6 +167,7 @@ class ButtonWithGradientBackground extends StatelessWidget {
 class ButtonWithGradientBackgroundAndIcons extends StatelessWidget {
   final String text;
   final Function onPressed;
+  final bool isChat;
   final double radius;
   final double buttonWidth;
   final double buttonHeight;
@@ -186,6 +187,7 @@ class ButtonWithGradientBackgroundAndIcons extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
+    this.isChat = false,
     this.radius = 30.0,
     this.buttonWidth = 90,
     this.buttonHeight = 7.5,
@@ -245,11 +247,17 @@ class ButtonWithGradientBackgroundAndIcons extends StatelessWidget {
                   SizedBox(
                     width: Helper.dynamicWidth(context, 5),
                   ),
-                  SvgPicture.asset(
-                    imagePath.toString(),
-                    width: Helper.dynamicHeight(context, imagewidth),
-                    height: Helper.dynamicHeight(context, imageHeight),
-                  ),
+                  isChat
+                      ? Image.asset(
+                          imagePath,
+                          width: Helper.dynamicHeight(context, imagewidth),
+                          height: Helper.dynamicHeight(context, imageHeight),
+                        )
+                      : SvgPicture.asset(
+                          imagePath.toString(),
+                          width: Helper.dynamicHeight(context, imagewidth),
+                          height: Helper.dynamicHeight(context, imageHeight),
+                        ),
                   SizedBox(
                     width: Helper.dynamicWidth(context, 3),
                   ),
@@ -284,10 +292,11 @@ class ButtonWithGradientBackgroundAndMultiIcons extends StatelessWidget {
   final LinearGradient linearGradient;
   final Color color;
   final bool isBoxShadow;
-
+  final IconData icon;
   const ButtonWithGradientBackgroundAndMultiIcons({
     Key? key,
     required this.text,
+    required this.icon,
     required this.onPressed,
     this.radius = 30.0,
     this.buttonWidth = 90,
@@ -350,7 +359,7 @@ class ButtonWithGradientBackgroundAndMultiIcons extends StatelessWidget {
                       ),
                     ),
                     child: Icon(
-                      Icons.play_arrow,
+                      icon,
                       size: Helper.dynamicFont(context, 1.7),
                     ),
                   ),

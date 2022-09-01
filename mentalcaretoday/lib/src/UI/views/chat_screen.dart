@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
 import 'package:mentalcaretoday/src/UI/widgets/chat_footer.dart';
+import 'package:mentalcaretoday/src/UI/widgets/chat_list.dart';
 import 'package:mentalcaretoday/src/UI/widgets/display_text_image_gif.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
@@ -104,6 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
       throw RecordingPermissionException('Mic permission not allowed!');
     }
     await _soundRecorder?.openRecorder();
+    _soundRecorder?.setSubscriptionDuration(const Duration(milliseconds: 500));
     isRecorderInit = true;
   }
 
@@ -273,7 +276,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 borderRadius: BorderRadius.circular(
                                     Helper.dynamicFont(context, 13.5)),
                                 child: Image.network(
-                                  otherUser.image!,
+                                  currentUser.image!,
                                   fit: BoxFit.cover,
                                   // loadingBuilder: (BuildContext context, Widget child,
                                   //     ImageChunkEvent? loadingProgress) {
@@ -342,159 +345,77 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Helper.dynamicWidth(context, 5),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: Helper.dynamicHeight(context, 50),
-                              child: StreamBuilder<List<Message>>(
-                                  stream: _chatRepository.getChatStream(
-                                      otherUser.id.toString(), context),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(child: Container());
-                                    }
-
-                                    SchedulerBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      messageController.jumpTo(messageController
-                                          .position.maxScrollExtent);
-                                    });
-                                    return ListView.builder(
-                                      controller: messageController,
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final messageData =
-                                            snapshot.data![index];
-                                        print(messageData.type);
-                                        var timeSent = DateFormat.Hm()
-                                            .format(messageData.timeSent);
-                                        return messageData.type ==
-                                                MessageEnum.image
-                                            ? Align(
-                                                alignment:
-                                                    (messageData.senderId !=
-                                                            currentUser.id
-                                                                .toString()
-                                                        ? Alignment.topLeft
-                                                        : Alignment.topRight),
-                                                child: SizedBox(
-                                                  height: 200,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: DisplayTextImageGIF(
-                                                      messageSenderId:
-                                                          messageData.senderId,
-                                                      message: messageData.text,
-                                                      type: messageData.type,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            : messageData.type ==
-                                                    MessageEnum.audio
-                                                ? Align(
-                                                    alignment: (messageData
-                                                                .senderId !=
-                                                            currentUser.id
-                                                                .toString()
-                                                        ? Alignment.topLeft
-                                                        : Alignment.topRight),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child:
-                                                          DisplayTextImageGIF(
-                                                        messageSenderId:
-                                                            messageData
-                                                                .senderId,
-                                                        message:
-                                                            messageData.text,
-                                                        type: messageData.type,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          Helper.dynamicWidth(
-                                                              context, 2),
-                                                      vertical:
-                                                          Helper.dynamicHeight(
-                                                              context, 1),
-                                                    ),
-                                                    child: Align(
-                                                      alignment: (messageData
-                                                                  .senderId !=
-                                                              currentUser.id
-                                                                  .toString()
-                                                          ? Alignment.topLeft
-                                                          : Alignment.topRight),
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          color: (messageData
-                                                                      .senderId !=
-                                                                  currentUser.id
-                                                                      .toString()
-                                                              ? Colors
-                                                                  .grey.shade200
-                                                              : Colors
-                                                                  .blue[100]),
-                                                        ),
-                                                        padding: EdgeInsets.all(
-                                                            Helper.dynamicFont(
-                                                                context, 1)),
-                                                        child: TextWidget(
-                                                          text:
-                                                              messageData.text,
-                                                          color: R
-                                                              .color.dark_black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                      },
-                                    );
-                                  }),
-                            ),
-                          ],
-                        ),
+                      ChatList(),
+                      Stack(
+                        children: [
+                          ChatFooter(
+                              isRecording: isRecording,
+                              isShowSendButton: isShowSendButton,
+                              textController: _messageController,
+                              onPressSend: () {
+                                sendMessage();
+                              },
+                              onChanged: (val) {
+                                if (val.isNotEmpty) {
+                                  setState(() {
+                                    isShowSendButton = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isShowSendButton = false;
+                                  });
+                                }
+                              },
+                              node: messageNode,
+                              onPressGift: () {
+                                selectImage();
+                              }),
+                          isRecording
+                              ? Container(
+                                  height: 30,
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: const EdgeInsets.only(
+                                      left: 30, right: 65, top: 18),
+                                  decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color.fromRGBO(141, 227, 216, 1.0),
+                                          Color.fromRGBO(126, 194, 220, 1.0),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: StreamBuilder<RecordingDisposition>(
+                                      stream: _soundRecorder!.onProgress,
+                                      builder: (context, snapshot) {
+                                        final duration = snapshot.hasData
+                                            ? snapshot.data!.duration
+                                            : Duration.zero;
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const BlinkText(
+                                              'Recording',
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: Colors.redAccent),
+                                              endColor: Colors.orange,
+                                            ),
+                                            const SizedBox(
+                                              width: 50,
+                                            ),
+                                            TextWidget(
+                                              text: '${duration.inSeconds}',
+                                              color: R.color.white,
+                                              fontSize: 1.5,
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                )
+                              : SizedBox.shrink(),
+                        ],
                       ),
-                      ChatFooter(
-                          isRecording: isRecording,
-                          isShowSendButton: isShowSendButton,
-                          textController: _messageController,
-                          onPressSend: () {
-                            sendMessage();
-                          },
-                          onChanged: (val) {
-                            if (val.isNotEmpty) {
-                              setState(() {
-                                isShowSendButton = true;
-                              });
-                            } else {
-                              setState(() {
-                                isShowSendButton = false;
-                              });
-                            }
-                          },
-                          node: messageNode,
-                          onPressGift: () {
-                            selectImage();
-                          }),
                     ],
                   ),
                 ),

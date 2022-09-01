@@ -58,10 +58,10 @@ class _DisplayTextImageGIFState extends State<DisplayTextImageGIF> {
                 child: Row(
                   children: [
                     widget.messageSenderId == currentUser.id.toString()
-                        ? const CircleAvatar(
+                        ? CircleAvatar(
                             backgroundColor: Colors.grey,
                             radius: 15,
-                            child: Icon(Icons.person),
+                            child: Image.network(currentUser.image!),
                           )
                         : SizedBox.shrink(),
                     const SizedBox(

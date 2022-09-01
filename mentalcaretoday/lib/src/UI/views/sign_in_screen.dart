@@ -69,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
       email: emailController.text,
       password: passwordController.text,
     );
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 3));
 
     setState(() {
       isLoading = false;

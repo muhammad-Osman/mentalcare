@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mentalcaretoday/src/UI/views/home_screen.dart';
 import 'package:mentalcaretoday/src/models/single_music.dart';
+import 'package:mentalcaretoday/src/models/welcome.dart';
 import 'package:mentalcaretoday/src/utils/end_points.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,6 +88,42 @@ class MoodServices {
     }
 
     return getMoods!;
+  }
+
+  Future<Welcome?> getWelcomeSong(BuildContext context) async {
+    Welcome? getWelcomeSong;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+      print(token);
+      http.Response userRes = await http.get(
+        Uri.parse(welcomeSongUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+
+      // ignore: use_build_context_synchronously
+      print(userRes.body);
+      httpErrorHandle(
+        response: userRes,
+        context: context,
+        onSuccess: () {
+          getWelcomeSong = welcomeFromJson(userRes.body);
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+      print("Welcome song Not Found");
+      // showSnackBar(context, e.toString());
+    }
+
+    return getWelcomeSong;
   }
 
   Future<SingleMusic> getSingleMusic(BuildContext context, int id) async {

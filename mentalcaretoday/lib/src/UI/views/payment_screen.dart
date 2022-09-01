@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
 import 'package:mentalcaretoday/src/UI/widgets/input_field.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
+import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 
@@ -174,7 +175,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ),
                                   Center(
                                     child: ButtonWidget(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamed(addCardScreen);
+                                      },
                                       text: "Choose",
                                       fontSize: 1.5,
                                       buttonColor: R.color.paymentbuttonColor,
@@ -331,93 +335,93 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Helper.dynamicWidth(context, 5)),
-                    child: TextFieldWithIcon(
-                      onChanged: ((p0) {}),
-                      controller: _cardHolderController,
-                      node: cardHolderNode,
-                      placeHolder: "Card Holder Name",
-                    ),
-                  ),
-                  SizedBox(
-                    height: Helper.dynamicHeight(context, 3),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Helper.dynamicWidth(context, 5)),
-                    child: TextFieldWithIcon(
-                      onChanged: ((p0) {}),
-                      controller: _creditCardController,
-                      keyboardType: TextInputType.number,
-                      node: creditCardNode,
-                      placeHolder: "Credit Card Number",
-                    ),
-                  ),
-                  SizedBox(
-                    height: Helper.dynamicHeight(context, 3),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Helper.dynamicWidth(context, 5)),
-                    child: TextFieldWithIcon(
-                      onChanged: ((p0) {}),
-                      controller: _expirationController,
-                      node: expirationNode,
-                      placeHolder: "Expiration Date",
-                    ),
-                  ),
-                  SizedBox(
-                    height: Helper.dynamicHeight(context, 3),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Helper.dynamicWidth(context, 5),
-                    ),
-                    child: TextFieldWithIcon(
-                      onChanged: ((p0) {}),
-                      controller: _cvvController,
-                      keyboardType: TextInputType.number,
-                      node: cvvNode,
-                      placeHolder: "CCV",
-                    ),
-                  ),
-                  SizedBox(
-                    height: Helper.dynamicHeight(context, 4),
-                  ),
-                  isLoading
-                      ? ButtonWithGradientBackground(
-                          isLoading: true,
-                          text: "Save",
-                          onPressed: () {},
-                        )
-                      : ButtonWithGradientBackground(
-                          text: "SAVE CARD DETAILS",
-                          onPressed: () {
-                            if (_cardFormKey.currentState!.validate()) {
-                              addCard();
-                            }
-                          },
-                        ),
-                  SizedBox(
-                    height: Helper.dynamicHeight(context, 2),
-                  ),
-                  ButtonWithGradientBackground(
-                    text: "PAY",
-                    color: Colors.black,
-                    linearGradient: const LinearGradient(
-                      colors: [
-                        Color.fromRGBO(245, 245, 245, 1.0),
-                        Color.fromRGBO(245, 245, 245, 1.0),
-                      ],
-                    ),
-                    onPressed: () {
-                      // Navigator.of(context).pushNamed(
-                      //   homeScreen,
-                      // );
-                    },
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: Helper.dynamicWidth(context, 5)),
+                  //   child: TextFieldWithIcon(
+                  //     onChanged: ((p0) {}),
+                  //     controller: _cardHolderController,
+                  //     node: cardHolderNode,
+                  //     placeHolder: "Card Holder Name",
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: Helper.dynamicHeight(context, 3),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: Helper.dynamicWidth(context, 5)),
+                  //   child: TextFieldWithIcon(
+                  //     onChanged: ((p0) {}),
+                  //     controller: _creditCardController,
+                  //     keyboardType: TextInputType.number,
+                  //     node: creditCardNode,
+                  //     placeHolder: "Credit Card Number",
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: Helper.dynamicHeight(context, 3),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: Helper.dynamicWidth(context, 5)),
+                  //   child: TextFieldWithIcon(
+                  //     onChanged: ((p0) {}),
+                  //     controller: _expirationController,
+                  //     node: expirationNode,
+                  //     placeHolder: "Expiration Date",
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: Helper.dynamicHeight(context, 3),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //     horizontal: Helper.dynamicWidth(context, 5),
+                  //   ),
+                  //   child: TextFieldWithIcon(
+                  //     onChanged: ((p0) {}),
+                  //     controller: _cvvController,
+                  //     keyboardType: TextInputType.number,
+                  //     node: cvvNode,
+                  //     placeHolder: "CCV",
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: Helper.dynamicHeight(context, 4),
+                  // ),
+                  // isLoading
+                  //     ? ButtonWithGradientBackground(
+                  //         isLoading: true,
+                  //         text: "Save",
+                  //         onPressed: () {},
+                  //       )
+                  //     : ButtonWithGradientBackground(
+                  //         text: "SAVE CARD DETAILS",
+                  //         onPressed: () {
+                  //           if (_cardFormKey.currentState!.validate()) {
+                  //             addCard();
+                  //           }
+                  //         },
+                  //       ),
+                  // SizedBox(
+                  //   height: Helper.dynamicHeight(context, 2),
+                  // ),
+                  // ButtonWithGradientBackground(
+                  //   text: "PAY",
+                  //   color: Colors.black,
+                  //   linearGradient: const LinearGradient(
+                  //     colors: [
+                  //       Color.fromRGBO(245, 245, 245, 1.0),
+                  //       Color.fromRGBO(245, 245, 245, 1.0),
+                  //     ],
+                  //   ),
+                  //   onPressed: () {
+                  //     // Navigator.of(context).pushNamed(
+                  //     //   homeScreen,
+                  //     // );
+                  //   },
+                  // ),
                   SizedBox(
                     height: Helper.dynamicHeight(context, 3),
                   ),

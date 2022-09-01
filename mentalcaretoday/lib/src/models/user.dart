@@ -218,20 +218,20 @@ class User {
 
 class CurrentMood {
   CurrentMood({
-    required this.id,
-    required this.name,
-    required this.color,
+    this.id,
+    this.name,
+    this.color,
     this.deletedAt,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  int id;
-  String name;
-  String color;
+  int? id;
+  String? name;
+  String? color;
   dynamic deletedAt;
-  String createdAt;
-  String updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   factory CurrentMood.fromJson(Map<String, dynamic> json) => CurrentMood(
         id: json["id"],

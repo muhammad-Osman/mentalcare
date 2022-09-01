@@ -79,6 +79,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
   @override
   void dispose() {
     _pageManager.dispose();
+    afrimationPageManger.dispose();
     super.dispose();
     // recorder.dispose();
   }
@@ -711,6 +712,9 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                       top: Helper.dynamicHeight(context, 20),
                       left: Helper.dynamicWidth(context, 5),
                       child: ButtonWithGradientBackgroundAndMultiIcons(
+                        icon: _checkboxAffirmation
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
                         linearGradient: LinearGradient(
                           colors: [
                             R.color.white,
@@ -976,6 +980,8 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                         height: Helper.dynamicHeight(context, 9),
                         child: InkWell(
                           onTap: () {
+                            _pageManager.pause();
+                            afrimationPageManger.pause();
                             Navigator.of(context).pushNamed(usersScreen);
                           },
                           child: SvgPicture.asset(
@@ -993,6 +999,8 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                         height: Helper.dynamicHeight(context, 7),
                         child: InkWell(
                           onTap: () {
+                            _pageManager.pause();
+                            afrimationPageManger.pause();
                             Navigator.of(context).pushNamed(conversationScreen);
                           },
                           child: SvgPicture.asset(

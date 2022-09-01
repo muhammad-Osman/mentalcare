@@ -14,3 +14,4 @@ const String specificMoodScreen = '/specificMoodScreen';
 const String usersScreen = '/usersScreen';
 const String chatScreen = '/chatScreen';
 const String musicListScreen = '/musicListScreen';
+const String addCardScreen = '/addCardScreen';
