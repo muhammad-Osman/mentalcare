@@ -48,5 +48,12 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+<string>We want Image for Profile Picture</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>We want record audio by user and Play with music</string>
+<key>com.apple.security.network.client</key>
+    <true/>
+	
 </dict>
 </plist>

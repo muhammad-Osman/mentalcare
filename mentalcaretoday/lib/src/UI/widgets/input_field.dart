@@ -31,6 +31,7 @@ class TextFieldWithIcon extends StatelessWidget {
       this.cursorColor,
       this.placeHolderColor,
       this.isUpdate = false,
+      this.isRecording = false,
       this.maxLines = 1,
       this.minLines = 1,
       this.isSuffixIcon = false,
@@ -42,6 +43,7 @@ class TextFieldWithIcon extends StatelessWidget {
   final TextEditingController? controller;
   final String? imagePath;
   final bool isUpdate;
+  final bool isRecording;
   final double imageWidth;
   final double imageHeight;
   final String? placeHolder;
@@ -99,8 +101,8 @@ class TextFieldWithIcon extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: const BorderSide(color: Colors.red, width: 1.2),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 23, horizontal: 23),
+        contentPadding: EdgeInsets.symmetric(
+            vertical: isRecording ? 12 : 23, horizontal: 23),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: const BorderSide(

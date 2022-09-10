@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mentalcaretoday/src/UI/views/home_screen.dart';
@@ -161,6 +161,7 @@ class AuthService {
           //     .catchError((error) => print("Failed to add user: $error"));
           // ;
           await prefs.setString('x-auth-token', user['access_token']);
+          await prefs.setBool('isFirstRun', true);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const HomeScreen()),

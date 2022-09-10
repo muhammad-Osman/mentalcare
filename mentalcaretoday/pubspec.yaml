@@ -39,9 +39,9 @@ dependencies:
   shared_preferences: ^2.0.13
   cached_network_image: ^3.2.1
   just_audio:
-  cloudinary_public: ^0.11.0
+ 
   progress_dialog_null_safe: ^1.0.7
-  image_picker: ^0.8.5+3
+ 
   fluttertoast: ^8.0.9
   shimmer: ^2.0.0
   email_validator: ^2.0.1
@@ -53,6 +53,7 @@ dependencies:
   record_mp3: ^3.0.0
   flutter_sound: ^9.2.13
   google_sign_in: ^5.2.4
+  image_picker: ^0.8.5+3
   firebase_core:
   firebase_auth:
   cloud_firestore: ^3.4.6

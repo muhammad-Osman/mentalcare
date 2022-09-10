@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
 import 'package:mentalcaretoday/src/UI/widgets/draggable_sheet.dart';
 import 'package:mentalcaretoday/src/UI/widgets/music_container.dart';
+import 'package:mentalcaretoday/src/UI/widgets/recording_dialog.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/services/audio_page_manager.dart';
@@ -341,313 +342,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
         height: Helper.dynamicHeight(context, 100),
         width: Helper.dynamicWidth(context, 100),
         child: isLoading
-            ? SizedBox(
-                height: Helper.dynamicHeight(context, 35),
-                width: Helper.dynamicWidth(context, 100),
-                child: Stack(children: [
-                  Positioned(
-                    child: SizedBox(
-                      width: Helper.dynamicWidth(context, 100),
-                      height: Helper.dynamicHeight(context, 100),
-                      child: Image.asset(
-                        R.image.background,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 0.5),
-                    left: Helper.dynamicWidth(context, 37),
-                    child: SizedBox(
-                      width: Helper.dynamicWidth(context, 100),
-                      height: Helper.dynamicHeight(context, 25),
-                      child: SvgPicture.asset(
-                        R.image.leftCurve,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: Helper.dynamicWidth(context, 30),
-                    child: SizedBox(
-                      width: Helper.dynamicWidth(context, 100),
-                      height: Helper.dynamicHeight(context, 20),
-                      child: SvgPicture.asset(
-                        R.image.rightCurve,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      top: Helper.dynamicHeight(context, 5),
-                      left: Helper.dynamicWidth(context, 3),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade400,
-                        highlightColor: Colors.grey.shade300,
-                        child: Container(
-                          height: Helper.dynamicHeight(context, 6),
-                          width: Helper.dynamicHeight(context, 6),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                Helper.dynamicFont(context, 10),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
-                  Positioned(
-                      top: Helper.dynamicHeight(context, 6),
-                      left: Helper.dynamicWidth(context, 30),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade400,
-                        highlightColor: Colors.grey.shade300,
-                        child: Container(
-                          height: 20,
-                          width: 200,
-                          color: Colors.grey.shade400,
-                        ),
-                      )),
-                  Positioned(
-                      top: Helper.dynamicHeight(context, 20),
-                      left: Helper.dynamicWidth(context, 5),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade400,
-                        highlightColor: Colors.grey.shade300,
-                        child: Container(
-                          height: Helper.dynamicHeight(context, 7.5),
-                          width: Helper.dynamicWidth(context, 90),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            border: Border.all(
-                              color: Colors.transparent,
-                              width: 0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                                Helper.dynamicFont(context, 30)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                Helper.dynamicFont(context, 30)),
-                            child: Material(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                  Helper.dynamicFont(context, 30)),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: Helper.dynamicWidth(context, 5),
-                                      ),
-                                      Container(
-                                        height:
-                                            Helper.dynamicHeight(context, 4),
-                                        width: Helper.dynamicHeight(context, 4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade400,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                              Helper.dynamicFont(context, 10),
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(""),
-                                      ),
-                                      SizedBox(
-                                        width: Helper.dynamicWidth(context, 20),
-                                      ),
-                                      Container(
-                                        height: 17,
-                                        width: 120,
-                                        color: Colors.grey.shade400,
-                                      ),
-                                      // SvgPicture.asset(
-                                      //   imagePath.toString(),
-                                      //   width: Helper.dynamicHeight(context, imagewidth),
-                                      //   height: Helper.dynamicHeight(context, imageHeight),
-                                      // ),
-
-                                      SizedBox(
-                                        width: Helper.dynamicWidth(context, 3),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 30),
-                    left: Helper.dynamicWidth(context, 6),
-                    child: Row(
-                      children: <Widget>[
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade400,
-                          highlightColor: Colors.grey.shade300,
-                          child: Container(
-                            height: 25,
-                            color: Colors.grey.shade400,
-                            width: 100,
-                          ),
-                        ),
-                        SizedBox(
-                          width: Helper.dynamicWidth(context, 35),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade400,
-                          highlightColor: Colors.grey.shade300,
-                          child: Container(
-                            height: 25,
-                            width: 100,
-                            color: Colors.grey.shade400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 35),
-                    left: Helper.dynamicWidth(context, 5),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey.shade400,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(
-                        width: Helper.dynamicWidth(context, 8),
-                        height: Helper.dynamicHeight(context, 8),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 35),
-                    left: Helper.dynamicWidth(context, 85),
-                    child: SizedBox(
-                      width: Helper.dynamicWidth(context, 8),
-                      height: Helper.dynamicHeight(context, 8),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade400,
-                        highlightColor: Colors.grey.shade300,
-                        child: Container(
-                          width: Helper.dynamicWidth(context, 8),
-                          height: Helper.dynamicHeight(context, 8),
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade400,
-                              shape: BoxShape.circle),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 40),
-                    left: Helper.dynamicWidth(context, 25),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey.shade400,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(
-                        width: Helper.dynamicWidth(context, 50),
-                        height: Helper.dynamicWidth(context, 50),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      top: Helper.dynamicHeight(context, 70),
-                      // left: Helper.dynamicWidth(context, 25),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: Helper.dynamicWidth(context, 5),
-                            ),
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey.shade400,
-                              highlightColor: Colors.grey.shade300,
-                              child: Container(
-                                width: Helper.dynamicWidth(context, 90),
-                                height: Helper.dynamicWidth(context, 3),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Helper.dynamicHeight(context, 1),
-                          ),
-                          Row(
-                            children: [
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey.shade400,
-                                highlightColor: Colors.grey.shade300,
-                                child: Container(
-                                  width: Helper.dynamicWidth(context, 9),
-                                  height: Helper.dynamicWidth(context, 9),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.shade400,
-                                      shape: BoxShape.circle),
-                                ),
-                              ),
-                              SizedBox(
-                                width: Helper.dynamicWidth(context, 2),
-                              ),
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey.shade400,
-                                highlightColor: Colors.grey.shade300,
-                                child: Container(
-                                  width: Helper.dynamicWidth(context, 10),
-                                  height: Helper.dynamicWidth(context, 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.shade400,
-                                      shape: BoxShape.circle),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 89),
-                    left: Helper.dynamicWidth(context, 5),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey.shade400,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(
-                        width: Helper.dynamicWidth(context, 7),
-                        height: Helper.dynamicWidth(context, 7),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: Helper.dynamicHeight(context, 90),
-                    left: Helper.dynamicWidth(context, 85),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey.shade400,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(
-                        width: Helper.dynamicWidth(context, 7),
-                        height: Helper.dynamicWidth(context, 7),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                  ),
-                ]),
-              )
+            ? MoodShimer()
             : SizedBox(
                 height: Helper.dynamicHeight(context, 35),
                 width: Helper.dynamicWidth(context, 100),
@@ -804,18 +499,26 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                     Positioned(
                       top: Helper.dynamicHeight(context, 35),
                       left: Helper.dynamicWidth(context, 90),
-                      child: userProvider.user.premium!
+                      child: !userProvider.user.premium!
                           ? GestureDetector(
                               onTap: () async {
-                                if (isRecording) {
-                                  await stopRecord();
-                                  play();
-                                } else {
-                                  startRecord();
-                                }
-                                setState(() {
-                                  isRecording = !isRecording;
-                                });
+                                showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) {
+                                      return RecordingDialog(
+                                        affrimationId:
+                                            _singleMusic!.music!.musicId!,
+                                      );
+                                    });
+                                // if (isRecording) {
+                                //   await stopRecord();
+                                //   play();
+                                // } else {
+                                //   startRecord();
+                                // }
+                                // setState(() {
+                                //   isRecording = !isRecording;
+                                // });
                                 // recordAudio();
                               },
                               child: SizedBox(
@@ -1016,90 +719,315 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
       ),
     );
   }
+}
 
-  String statusText = "";
-  bool isComplete = false;
-  Future<bool> checkPermission() async {
-    if (!await Permission.microphone.isGranted) {
-      PermissionStatus status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        return false;
-      }
-    }
-    return true;
-  }
+class MoodShimer extends StatelessWidget {
+  const MoodShimer({
+    Key? key,
+  }) : super(key: key);
 
-  String? recordFilePath;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: Helper.dynamicHeight(context, 35),
+      width: Helper.dynamicWidth(context, 100),
+      child: Stack(children: [
+        Positioned(
+          child: SizedBox(
+            width: Helper.dynamicWidth(context, 100),
+            height: Helper.dynamicHeight(context, 100),
+            child: Image.asset(
+              R.image.background,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Positioned(
+          top: Helper.dynamicHeight(context, 0.5),
+          left: Helper.dynamicWidth(context, 37),
+          child: SizedBox(
+            width: Helper.dynamicWidth(context, 100),
+            height: Helper.dynamicHeight(context, 25),
+            child: SvgPicture.asset(
+              R.image.leftCurve,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          right: Helper.dynamicWidth(context, 30),
+          child: SizedBox(
+            width: Helper.dynamicWidth(context, 100),
+            height: Helper.dynamicHeight(context, 20),
+            child: SvgPicture.asset(
+              R.image.rightCurve,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        Positioned(
+            top: Helper.dynamicHeight(context, 5),
+            left: Helper.dynamicWidth(context, 3),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                height: Helper.dynamicHeight(context, 6),
+                width: Helper.dynamicHeight(context, 6),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      Helper.dynamicFont(context, 10),
+                    ),
+                  ),
+                ),
+              ),
+            )),
+        Positioned(
+            top: Helper.dynamicHeight(context, 6),
+            left: Helper.dynamicWidth(context, 30),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                height: 20,
+                width: 200,
+                color: Colors.grey.shade400,
+              ),
+            )),
+        Positioned(
+            top: Helper.dynamicHeight(context, 20),
+            left: Helper.dynamicWidth(context, 5),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                height: Helper.dynamicHeight(context, 7.5),
+                width: Helper.dynamicWidth(context, 90),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  border: Border.all(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(Helper.dynamicFont(context, 30)),
+                ),
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(Helper.dynamicFont(context, 30)),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius:
+                        BorderRadius.circular(Helper.dynamicFont(context, 30)),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Center(
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: Helper.dynamicWidth(context, 5),
+                            ),
+                            Container(
+                              height: Helper.dynamicHeight(context, 4),
+                              width: Helper.dynamicHeight(context, 4),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    Helper.dynamicFont(context, 10),
+                                  ),
+                                ),
+                              ),
+                              child: Text(""),
+                            ),
+                            SizedBox(
+                              width: Helper.dynamicWidth(context, 20),
+                            ),
+                            Container(
+                              height: 17,
+                              width: 120,
+                              color: Colors.grey.shade400,
+                            ),
+                            // SvgPicture.asset(
+                            //   imagePath.toString(),
+                            //   width: Helper.dynamicHeight(context, imagewidth),
+                            //   height: Helper.dynamicHeight(context, imageHeight),
+                            // ),
 
-  Future startRecord() async {
-    bool hasPermission = await checkPermission();
-    if (hasPermission) {
-      statusText = "Recording...";
-      recordFilePath = await getFilePath();
-      isComplete = false;
-      RecordMp3.instance.start(recordFilePath!, (type) {
-        statusText = "Record error--->$type";
-        setState(() {});
-      });
-    } else {
-      statusText = "No microphone permission";
-    }
-    setState(() {});
-  }
-
-  void pauseRecord() {
-    if (RecordMp3.instance.status == RecordStatus.PAUSE) {
-      bool s = RecordMp3.instance.resume();
-      if (s) {
-        statusText = "Recording...";
-        setState(() {});
-      }
-    } else {
-      bool s = RecordMp3.instance.pause();
-      if (s) {
-        statusText = "Recording pause...";
-        setState(() {});
-      }
-    }
-  }
-
-  Future stopRecord() async {
-    bool s = RecordMp3.instance.stop();
-    if (s) {
-      statusText = "Record complete";
-      isComplete = true;
-      setState(() {});
-    }
-  }
-
-  void resumeRecord() {
-    bool s = RecordMp3.instance.resume();
-    if (s) {
-      statusText = "Recording...";
-      setState(() {});
-    }
-  }
-
-  void play() {
-    if (recordFilePath != null && File(recordFilePath!).existsSync()) {
-      print(recordFilePath);
-      _moodServices.addrecording(
-          context: context,
-          path: File(recordFilePath!),
-          affirmationId: "1",
-          name: "recording");
-    }
-  }
-
-  int i = 0;
-
-  Future<String> getFilePath() async {
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String sdPath = storageDirectory.path + "/record";
-    var d = Directory(sdPath);
-    if (!d.existsSync()) {
-      d.createSync(recursive: true);
-    }
-    return sdPath + "/test_${i++}.mp3";
+                            SizedBox(
+                              width: Helper.dynamicWidth(context, 3),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )),
+        Positioned(
+          top: Helper.dynamicHeight(context, 30),
+          left: Helper.dynamicWidth(context, 6),
+          child: Row(
+            children: <Widget>[
+              Shimmer.fromColors(
+                baseColor: Colors.grey.shade400,
+                highlightColor: Colors.grey.shade300,
+                child: Container(
+                  height: 25,
+                  color: Colors.grey.shade400,
+                  width: 100,
+                ),
+              ),
+              SizedBox(
+                width: Helper.dynamicWidth(context, 35),
+              ),
+              Shimmer.fromColors(
+                baseColor: Colors.grey.shade400,
+                highlightColor: Colors.grey.shade300,
+                child: Container(
+                  height: 25,
+                  width: 100,
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: Helper.dynamicHeight(context, 35),
+          left: Helper.dynamicWidth(context, 5),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              width: Helper.dynamicWidth(context, 8),
+              height: Helper.dynamicHeight(context, 8),
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade400, shape: BoxShape.circle),
+            ),
+          ),
+        ),
+        Positioned(
+          top: Helper.dynamicHeight(context, 35),
+          left: Helper.dynamicWidth(context, 85),
+          child: SizedBox(
+            width: Helper.dynamicWidth(context, 8),
+            height: Helper.dynamicHeight(context, 8),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: Helper.dynamicWidth(context, 8),
+                height: Helper.dynamicHeight(context, 8),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade400, shape: BoxShape.circle),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: Helper.dynamicHeight(context, 40),
+          left: Helper.dynamicWidth(context, 25),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              width: Helper.dynamicWidth(context, 50),
+              height: Helper.dynamicWidth(context, 50),
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade400, shape: BoxShape.circle),
+            ),
+          ),
+        ),
+        Positioned(
+            top: Helper.dynamicHeight(context, 70),
+            // left: Helper.dynamicWidth(context, 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Helper.dynamicWidth(context, 5),
+                  ),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade400,
+                    highlightColor: Colors.grey.shade300,
+                    child: Container(
+                      width: Helper.dynamicWidth(context, 90),
+                      height: Helper.dynamicWidth(context, 3),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: Helper.dynamicHeight(context, 1),
+                ),
+                Row(
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade400,
+                      highlightColor: Colors.grey.shade300,
+                      child: Container(
+                        width: Helper.dynamicWidth(context, 9),
+                        height: Helper.dynamicWidth(context, 9),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade400,
+                            shape: BoxShape.circle),
+                      ),
+                    ),
+                    SizedBox(
+                      width: Helper.dynamicWidth(context, 2),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade400,
+                      highlightColor: Colors.grey.shade300,
+                      child: Container(
+                        width: Helper.dynamicWidth(context, 10),
+                        height: Helper.dynamicWidth(context, 10),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade400,
+                            shape: BoxShape.circle),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )),
+        Positioned(
+          top: Helper.dynamicHeight(context, 89),
+          left: Helper.dynamicWidth(context, 5),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              width: Helper.dynamicWidth(context, 7),
+              height: Helper.dynamicWidth(context, 7),
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade400, shape: BoxShape.circle),
+            ),
+          ),
+        ),
+        Positioned(
+          top: Helper.dynamicHeight(context, 90),
+          left: Helper.dynamicWidth(context, 85),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              width: Helper.dynamicWidth(context, 7),
+              height: Helper.dynamicWidth(context, 7),
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade400, shape: BoxShape.circle),
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }
