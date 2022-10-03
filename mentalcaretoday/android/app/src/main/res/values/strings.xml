@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Mental Care</string>
+<string name="facebook_app_id">802868360868199</string>
+<string name="fb_login_protocol_scheme">fb802868360868199</string>
+<string name="facebook_client_token">7d279cbd96762156cb70c7b85c8d01c3</string>
+</resources>

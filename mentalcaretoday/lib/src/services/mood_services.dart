@@ -183,14 +183,16 @@ class MoodServices {
       //for token
       request.headers.addAll({
         "Authorization": "Bearer $token",
+        "Accept": "application/json",
         'Content-Type': 'application/json; charset=UTF-8',
       });
 
       //for image and videos and files
-      print(path.path.split("/").last);
-      request.files.add(http.MultipartFile.fromBytes(
-          'recording', path.readAsBytesSync(),
-          filename: path.path.split("/").last));
+      print(path);
+      request.files
+          .add(http.MultipartFile.fromBytes('recording', path.readAsBytesSync(),
+              //  filename: "aac"));
+              filename: path.path.split("/").last));
 
       //for completeing the request
       var response = await request.send();

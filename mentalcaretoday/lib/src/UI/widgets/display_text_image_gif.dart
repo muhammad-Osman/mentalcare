@@ -31,6 +31,7 @@ class _DisplayTextImageGIFState extends State<DisplayTextImageGIF> {
   @override
   void initState() {
     super.initState();
+    print(widget.message);
     _pageManager = PageManager(widget.message);
   }
 

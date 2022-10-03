@@ -153,13 +153,13 @@ class AuthService {
             passwordConfirmation: userData.passwordConfirmation,
           );
           print(userData.currentMood?.name);
-          // await firestore
-          //     .collection('users')
-          //     .doc(userData.id.toString())
-          //     .set(_user.toMap())
-          //     .then((value) => print("User Added"))
-          //     .catchError((error) => print("Failed to add user: $error"));
-          // ;
+          await firestore
+              .collection('users')
+              .doc(userData.id.toString())
+              .set(_user.toMap())
+              .then((value) => print("User Added"))
+              .catchError((error) => print("Failed to add user: $error"));
+          ;
           await prefs.setString('x-auth-token', user['access_token']);
           await prefs.setBool('isFirstRun', true);
           // ignore: use_build_context_synchronously

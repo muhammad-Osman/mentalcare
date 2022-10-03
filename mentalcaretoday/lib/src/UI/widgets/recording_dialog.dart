@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:mentalcaretoday/src/UI/widgets/text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:record_mp3/record_mp3.dart';
+import 'package:record/record.dart';
+//import 'package:record_mp3/record_mp3.dart';
 
 import '../../services/auth_services.dart';
 import '../../services/mood_services.dart';
@@ -31,32 +34,107 @@ class _RecordingDialogState extends State<RecordingDialog> {
   final AuthService _authService = AuthService();
   final MoodServices _moodServices = MoodServices();
   final _addRecordingKey = GlobalKey<FormState>();
-  late ProgressDialog pr;
-  @override
+
+/*  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    pr = ProgressDialog(context);
-    startTimer();
-    startRecord();
+
+    _soundRecorder = FlutterSoundRecorder();
+    openAudio();
+
+    // sendRecording();
+  }*/
+
+  @override
+  void initState() {
+    _soundRecorder = FlutterSoundRecorder();
+    openAudio();
+
+    super.initState();
+  }
+
+  FlutterSoundRecorder? _soundRecorder;
+  bool isRecorderInit = false;
+  bool isShowEmojiContainer = false;
+  bool isRecording = false;
+  void openAudio() async {
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException('Mic permission not allowed!');
+    }
+    await _soundRecorder?.openRecorder();
+    _soundRecorder?.setSubscriptionDuration(const Duration(milliseconds: 500));
+    isRecorderInit = true;
+  }
+
+  String? recordFilePath;
+
+  int i = 0;
+  Future<String> getFilePath() async {
+    Directory storageDirectory = await getApplicationDocumentsDirectory();
+    String sdPath = storageDirectory.path + "/record";
+    var d = Directory(sdPath);
+    if (!d.existsSync()) {
+      d.createSync(recursive: true);
+    }
+    return sdPath + "/test_${i++}.aac";
   }
 
   void sendRecording() async {
-    if (recordFilePath != null && File(recordFilePath!).existsSync()) {
+    var tempDir = await getTemporaryDirectory();
+    var path = '${tempDir.path}/flutter_sound.aac';
+    //recordFilePath = await getCurrentUrl(tempDir.path);
+    if (!isRecorderInit) {
+      return;
+    }
+    if (isRecording) {
+      await _soundRecorder?.stopRecorder();
       print(recordFilePath);
-      setState(() {
-        isLoading = true;
-      });
       await _moodServices.addrecording(
           context: context,
-          path: File(recordFilePath!),
+          path: File(path),
           affirmationId: widget.affrimationId,
           name: _nameController.text);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
+    } else {
+      await _soundRecorder?.startRecorder(
+        toFile: path,
+      );
     }
+
+    setState(() {
+      isRecording = !isRecording;
+    });
+  }
+
+  Future<String> getCurrentUrl(String url) async {
+    if (Platform.isIOS) {
+      String a = url.substring(url.indexOf("Documents/") + 10, url.length);
+      Directory dir = await getApplicationDocumentsDirectory();
+      a = "${dir.path}/$a/.aac";
+      return a;
+    } else {
+      return url;
+    }
+  }
+
+  Timer? _timer;
+  int _start = 0;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        setState(() {
+          _start++;
+        });
+      },
+    );
   }
 
   bool isLoading = false;
@@ -96,27 +174,26 @@ class _RecordingDialogState extends State<RecordingDialog> {
                   height: 20,
                 ),
                 Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1),
-                  ),
-                  alignment: Alignment.center,
-                  child: TextWidget(
-                    text: "$_start",
-                    color: R.color.white,
-                    fontSize: 1.4,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 1),
+                    ),
+                    alignment: Alignment.center,
+                    child: TextWidget(
+                      text: "$_start",
+                      color: R.color.white,
+                      fontSize: 1.4,
+                      fontWeight: FontWeight.w600,
+                    )),
                 const SizedBox(
                   height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: SizedBox(
-                    height: 30,
+                    height: 35,
                     child: TextFieldWithIcon(
                       isRecording: true,
                       onChanged: ((p0) {}),
@@ -128,7 +205,7 @@ class _RecordingDialogState extends State<RecordingDialog> {
                 const SizedBox(
                   height: 15,
                 ),
-                Padding(
+                /*  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: SizedBox(
                     height: 30,
@@ -141,49 +218,39 @@ class _RecordingDialogState extends State<RecordingDialog> {
                       ),
                       text: "Stop Recording",
                       color: const Color.fromRGBO(126, 194, 220, 1.0),
-                      onPressed: () {
-                        _timer.cancel();
-                        stopRecord();
-                      },
+                      onPressed: () {},
                     ),
                   ),
                 ),
                 const SizedBox(
                   height: 15,
-                ),
-                isLoading
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: SizedBox(
-                          height: 30,
-                          child: ButtonWithGradientBackground(
-                            isLoading: true,
-                            text: "SIGN UP",
-                            onPressed: () {},
-                          ),
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: SizedBox(
-                          height: 30,
-                          child: ButtonWithGradientBackground(
-                            linearGradient: const LinearGradient(
-                              colors: [
-                                Color.fromRGBO(255, 255, 255, 1.0),
-                                Color.fromRGBO(255, 255, 255, 1.0),
-                              ],
-                            ),
-                            text: "Submit",
-                            color: const Color.fromRGBO(126, 194, 220, 1.0),
-                            onPressed: () {
-                              if (_addRecordingKey.currentState!.validate()) {
-                                sendRecording();
-                              }
-                            },
-                          ),
-                        ),
+                ),*/
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: SizedBox(
+                    height: 35,
+                    child: ButtonWithGradientBackground(
+                      linearGradient: const LinearGradient(
+                        colors: [
+                          Color.fromRGBO(255, 255, 255, 1.0),
+                          Color.fromRGBO(255, 255, 255, 1.0),
+                        ],
                       ),
+                      text: isRecording ? "Submit" : "Start",
+                      color: const Color.fromRGBO(126, 194, 220, 1.0),
+                      onPressed: () {
+                        if (_addRecordingKey.currentState!.validate()) {
+                          if (!isRecording) {
+                            startTimer();
+                          } else {
+                            _timer!.cancel();
+                          }
+                          sendRecording();
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -192,93 +259,22 @@ class _RecordingDialogState extends State<RecordingDialog> {
     );
   }
 
-  late Timer _timer;
-  int _start = 0;
+  /* Widget _buildTimer() {
+    final String minutes = _formatNumber(_recordDuration ~/ 60);
+    final String seconds = _formatNumber(_recordDuration % 60);
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        setState(() {
-          _start++;
-        });
-      },
+    return Text(
+      '$minutes : $seconds',
+      style: const TextStyle(color: Colors.red),
     );
   }
-
-  String statusText = "";
-  bool isComplete = false;
-  Future<bool> checkPermission() async {
-    if (!await Permission.microphone.isGranted) {
-      PermissionStatus status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        return false;
-      }
+*/
+  String _formatNumber(int number) {
+    String numberStr = number.toString();
+    if (number < 10) {
+      numberStr = '0' + numberStr;
     }
-    return true;
-  }
 
-  String? recordFilePath;
-
-  Future startRecord() async {
-    bool hasPermission = await checkPermission();
-    if (hasPermission) {
-      statusText = "Recording...";
-      recordFilePath = await getFilePath();
-      isComplete = false;
-      RecordMp3.instance.start(recordFilePath!, (type) {
-        statusText = "Record error--->$type";
-        setState(() {});
-      });
-    } else {
-      statusText = "No microphone permission";
-    }
-    setState(() {});
-  }
-
-  void pauseRecord() {
-    if (RecordMp3.instance.status == RecordStatus.PAUSE) {
-      bool s = RecordMp3.instance.resume();
-      if (s) {
-        statusText = "Recording...";
-        setState(() {});
-      }
-    } else {
-      bool s = RecordMp3.instance.pause();
-      if (s) {
-        statusText = "Recording pause...";
-        setState(() {});
-      }
-    }
-  }
-
-  Future stopRecord() async {
-    bool s = RecordMp3.instance.stop();
-    if (s) {
-      statusText = "Record complete";
-      isComplete = true;
-      setState(() {});
-    }
-  }
-
-  void resumeRecord() {
-    bool s = RecordMp3.instance.resume();
-    if (s) {
-      statusText = "Recording...";
-      setState(() {});
-    }
-  }
-
-  int i = 0;
-
-  Future<String> getFilePath() async {
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String sdPath = storageDirectory.path + "/record";
-    var d = Directory(sdPath);
-    if (!d.existsSync()) {
-      d.createSync(recursive: true);
-    }
-    return sdPath + "/test_${i++}.mp3";
+    return numberStr;
   }
 }

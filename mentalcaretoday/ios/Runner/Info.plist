@@ -2,13 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-</dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Mentalcaretoday</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,10 +22,39 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.367472766997-knacjhuralpubp5ct26gj9jsp6cq7vtq</string>
+				<string>fb802868360868199</string>
+			</array>
+		
+		</dict>
+	</array>
+		<key>FacebookAppID</key>
+			<string>802868360868199</string>
+			<key>FacebookClientToken</key>
+			<string>7d279cbd96762156cb70c7b85c8d01c3</string>
+			<key>FacebookDisplayName</key>
+			<string>Mental Care</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>User can play music within the application and on the top of music user can play affermations or user can record his own recording and play recording with music.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>User can upload his profile picture to manage profile and finiding his friends easily.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need to access to the microphone to record audio file so user can play his own recorded music with our application music.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>In our application user can do chat with each other. While in chat user can send recording, message and photos. User can select profile image from phone gallery </string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<string>In our application user can do chat with each other. While in chat user can send recording, message and photos. User can select profile image from phone gallery</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -46,14 +74,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-<string>We want Image for Profile Picture</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>We want record audio by user and Play with music</string>
-<key>com.apple.security.network.client</key>
-    <true/>
-	
 </dict>
 </plist>

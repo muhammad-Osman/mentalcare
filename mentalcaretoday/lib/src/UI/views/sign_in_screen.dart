@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentalcaretoday/src/UI/widgets/buttons.dart';
@@ -7,9 +8,11 @@ import 'package:mentalcaretoday/src/routes/index.dart';
 import 'package:mentalcaretoday/src/utils/constants.dart';
 import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../services/auth_services.dart';
 import '../../services/firebase_auth_services.dart';
+import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -212,14 +215,47 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: Helper.dynamicWidth(context, 8),
                       ),
                       SocialLoginButton(
-                        ontap: () {},
+                        ontap: () async {
+                          final appleIdCredential =
+                              await SignInWithApple.getAppleIDCredential(
+                            scopes: [
+                              AppleIDAuthorizationScopes.email,
+                              AppleIDAuthorizationScopes.fullName,
+                            ],
+                          );
+                          final oAuthProvider = OAuthProvider('apple.com');
+                          final credential = oAuthProvider.credential(
+                            idToken: appleIdCredential.identityToken,
+                            accessToken: appleIdCredential.authorizationCode,
+                          );
+                          UserCredential userCredential = await FirebaseAuth
+                              .instance
+                              .signInWithCredential(credential);
+
+                          if (userCredential.user != null) {
+                            print(userCredential.user?.email);
+                            if (userCredential.additionalUserInfo!.isNewUser) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpScreen()),
+                              );
+                            } else {
+                              authService.signInGoogle(
+                                  context: context,
+                                  email: userCredential.user!.email!);
+                            }
+                          }
+                          print(credential);
+                        },
                         image: R.image.apple,
                       ),
                       SizedBox(
                         width: Helper.dynamicWidth(context, 8),
                       ),
                       SocialLoginButton(
-                        ontap: () {},
+                        ontap: () {
+                          _fbServices.signInWithFacebook(context);
+                        },
                         image: R.image.facebook,
                       ),
                     ],

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:blinking_text/blinking_text.dart';
@@ -52,8 +53,9 @@ class _ChatScreenState extends State<ChatScreen> {
         return;
       }
       if (isRecording) {
-        await _soundRecorder?.stopRecorder();
-        sendFileMessage(File(path), MessageEnum.audio);
+        final path = await _soundRecorder?.stopRecorder();
+
+        sendFileMessage(File(path!), MessageEnum.audio);
       } else {
         await _soundRecorder?.startRecorder(
           toFile: path,
@@ -108,6 +110,21 @@ class _ChatScreenState extends State<ChatScreen> {
     await _soundRecorder?.openRecorder();
     _soundRecorder?.setSubscriptionDuration(const Duration(milliseconds: 500));
     isRecorderInit = true;
+  }
+
+  Timer? _timer;
+  int _start = 0;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        setState(() {
+          _start++;
+        });
+      },
+    );
   }
 
   bool isLoading = false;
@@ -353,6 +370,11 @@ class _ChatScreenState extends State<ChatScreen> {
                               isShowSendButton: isShowSendButton,
                               textController: _messageController,
                               onPressSend: () {
+                                if (!isRecording) {
+                                  startTimer();
+                                } else {
+                                  _timer!.cancel();
+                                }
                                 sendMessage();
                               },
                               onChanged: (val) {
@@ -384,35 +406,26 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(20)),
-                                  child: StreamBuilder<RecordingDisposition>(
-                                      stream: _soundRecorder!.onProgress,
-                                      builder: (context, snapshot) {
-                                        final duration = snapshot.hasData
-                                            ? snapshot.data!.duration
-                                            : Duration.zero;
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const BlinkText(
-                                              'Recording',
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  color: Colors.redAccent),
-                                              endColor: Colors.orange,
-                                            ),
-                                            const SizedBox(
-                                              width: 50,
-                                            ),
-                                            TextWidget(
-                                              text: '${duration.inSeconds}',
-                                              color: R.color.white,
-                                              fontSize: 1.5,
-                                            ),
-                                          ],
-                                        );
-                                      }),
-                                )
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const BlinkText(
+                                        'Recording',
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.redAccent),
+                                        endColor: Colors.orange,
+                                      ),
+                                      const SizedBox(
+                                        width: 50,
+                                      ),
+                                      TextWidget(
+                                        text: '$_start',
+                                        color: R.color.white,
+                                        fontSize: 1.5,
+                                      ),
+                                    ],
+                                  ))
                               : SizedBox.shrink(),
                         ],
                       ),

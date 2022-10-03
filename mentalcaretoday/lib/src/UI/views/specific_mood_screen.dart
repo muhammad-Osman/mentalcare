@@ -19,7 +19,6 @@ import 'package:mentalcaretoday/src/utils/helper_method.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:record_mp3/record_mp3.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -251,6 +250,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                       itemCount: _singleMusic!.recordings!.length,
                       itemBuilder: (context, index) {
                         return MusicContainerWithTwoIcons(
+                          // text: "test",
                           text: _singleMusic!.recordings![index].name!,
                           onPressedMusic: () {
                             setState(() {
@@ -333,6 +333,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
   @override
   Widget build(BuildContext context) {
     // final isRecording = recorder.isRecording;
+    // print(_singleMusic!.recordings![recordedSelectedIndex].path!);
     var userProvider = Provider.of<UserProvider>(
       context,
     );
@@ -507,7 +508,7 @@ class _SpecificMoodScreenState extends State<SpecificMoodScreen> {
                                     builder: (context) {
                                       return RecordingDialog(
                                         affrimationId:
-                                            _singleMusic!.music!.musicId!,
+                                            _singleMusic!.music!.id.toString(),
                                       );
                                     });
                                 // if (isRecording) {
